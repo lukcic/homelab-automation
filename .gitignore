@@ -1,0 +1,10 @@
+.DS_Store
+sites/*/vars.yml
+
+*.pem
+*.pub
+inventory
+*.tfvars
+.terraform
+terraform.tfstate
+terraform.tfstate.backup
