@@ -9,10 +9,3 @@
   roles:
     - role: common/packages
     - role: common/users
-
-- hosts: lxc_ansible
-  become: true
-  gather_facts: yes
-  roles:
-    - role: common/networking
-    - role: named
