@@ -1,0 +1,16 @@
+all_groups:
+  - name: wheel
+  - name: docker
+
+all_users:
+  - name: ansible
+    groups: wheel
+    shell: /bin/bash
+
+  - name: docker
+    groups: docker
+    shell: /usr/sbin/nologin
+
+  - name: lukcic
+    groups: wheel
+    shell: /bin/bash

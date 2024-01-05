@@ -1,0 +1,9 @@
+- name: Install required package
+  apt:
+    pkg:
+      - bind9
+      - bind9utils 
+      - bind9-doc
+    state: latest
+    update_cache: true
+  run_once: true

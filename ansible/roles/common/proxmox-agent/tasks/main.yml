@@ -1,0 +1,13 @@
+- name: Install quemu agent
+  apt:
+    pkg:
+      - qemu-guest-agent
+    state: latest
+    update_cache: true
+  run_once: true
+
+- name: Start quemu agent service
+  systemd:
+    name: qemu-guest-agent
+    state: started
+    enabled: true

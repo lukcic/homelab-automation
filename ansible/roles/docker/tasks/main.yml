@@ -1,0 +1,69 @@
+#- include_vars: ./vars.yml
+
+- name: Check distribution
+  debug: var=ansible_os_family
+
+- name: Add Docker GPG apt Key [Ubuntu]
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+  run_once: true
+  when: ansible_os_family == "Ubuntu"
+
+- name: Add Docker GPG apt Key [Debian]
+  # apt_key:
+  #   url: https://download.docker.com/linux/debian/gpg
+  #   state: present
+  shell: |
+    install -m 0755 -d /etc/apt/keyrings
+    curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+    chmod a+r /etc/apt/keyrings/docker.gpg
+  run_once: true
+  when: ansible_os_family == "Debian"
+
+- name: Add Docker Repository [Ubuntu]
+  apt_repository:
+    repo: deb https://download.docker.com/linux/ubuntu jammy stable
+    state: present
+  run_once: true
+  when: ansible_os_family == "Ubuntu"
+
+- name: Add Docker Repository [Debian]
+  shell: |
+    echo \
+    "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \
+    $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+    sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+  when: ansible_os_family == "Debian"
+
+- name: Update apt and install docker-ce
+  apt:
+    name: 
+      - docker-ce
+      - docker-ce-cli 
+      - containerd.io 
+      - docker-buildx-plugin 
+      - docker-compose-plugin
+    state: latest
+    update_cache: true
+  register: docker_installation
+
+- name: Install Modules for Python
+  pip:
+    name: 
+      - docker
+      - requests
+      - urllib3==1.26.6
+
+- name: Make sure a Docker unit is running
+  systemd:
+    name: docker
+    state: started
+    enabled: true      
+
+- name: Add Docker permissions
+  shell: "usermod -aG docker {{ item.name }}"
+  when: docker_installation.changed
+  with_items: "{{ all_users }}"
+  notify:
+    - "Reboot and wait"

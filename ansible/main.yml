@@ -1,0 +1,18 @@
+- name: Set variables
+  hosts: localhost
+  tasks:
+    - include_vars: '{{ site_dir }}/vars.yml'
+
+- hosts: lxc_root
+  become: true
+  gather_facts: yes
+  roles:
+    - role: common/packages
+    - role: common/users
+
+- hosts: lxc_ansible
+  become: true
+  gather_facts: yes
+  roles:
+    - role: common/networking
+    - role: named
