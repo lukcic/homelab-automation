@@ -1,0 +1,107 @@
+- name: NFS volume ES
+  docker_volume:
+    driver: "local"
+    driver_options:
+      type: nfs
+      o: "addr=192.168.254.100,rw,nfsvers=4"
+      device: :/tubearchivist/es
+    volume_name: nfs-tubearchivist-es
+#'type=volume,dst=/mnt,volume-driver=local,volume-opt=type=nfs,volume-opt=device=:/tubearchivist,
+#"volume-opt=o=addr=192.168.254.100,rw,nfsvers=4"'
+#docker volume create --driver local --opt type=nfs --opt o=addr=192.168.254.100,rw --opt device=:/tubearchivist ta-nfs
+
+- name: NFS volume Media
+  docker_volume:
+    driver: "local"
+    driver_options:
+      type: nfs
+      o: "addr=192.168.254.100,rw,nfsvers=4"
+      device: :/tubearchivist/media
+    volume_name: nfs-tubearchivist-media
+
+- name: NFS volume Redis
+  docker_volume:
+    driver: "local"
+    driver_options:
+      type: nfs
+      o: "addr=192.168.254.100,rw,nfsvers=4"
+      device: :/tubearchivist/redis
+    volume_name: nfs-tubearchivist-redis
+
+- name: NFS volume Cache
+  docker_volume:
+    driver: "local"
+    driver_options:
+      type: nfs
+      o: "addr=192.168.254.100,rw,nfsvers=4"
+      device: :/tubearchivist/cache
+    volume_name: nfs-tubearchivist-cache
+
+- name: Start compose
+  community.docker.docker_compose:
+    project_name: tubearchivist
+    definition:
+      version: "3.5"
+      services:
+        tubearchivist:
+          container_name: tubearchivist
+          restart: unless-stopped
+          image: bbilly1/tubearchivist
+          ports:
+            - 8000:8000
+          volumes:
+            - nfs-tubearchivist-media:/youtube
+            - nfs-tubearchivist-cache:/cache
+          environment:
+            - ES_URL=http://archivist-es:9200
+            - REDIS_HOST=archivist-redis
+            - HOST_UID=1000
+            - HOST_GID=1000
+            - TA_HOST=tubearchivist.lukcic.net
+            - TA_USERNAME=lukcic
+            - TA_PASSWORD=Verysecret1!
+            - ELASTIC_PASSWORD=Verysecret1
+            - TZ=Europe/Warsaw
+          healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+            interval: 2m
+            timeout: 10s
+            retries: 3
+            start_period: 30s
+          depends_on:
+            - archivist-es
+            - archivist-redis
+        archivist-redis:
+          image: redis/redis-stack-server
+          container_name: archivist-redis
+          restart: unless-stopped
+          expose:
+            - "6379"
+          volumes:
+            - nfs-tubearchivist-redis:/data
+          depends_on:
+            - archivist-es
+        archivist-es:
+          image: bbilly1/tubearchivist-es
+          container_name: archivist-es
+          restart: unless-stopped
+          environment:
+            - "ELASTIC_PASSWORD=Verysecret1"
+            - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+            - "xpack.security.enabled=true"
+            - "discovery.type=single-node"
+            - "path.repo=/usr/share/elasticsearch/data/snapshot"
+          ulimits:
+            memlock:
+              soft: -1
+              hard: -1
+          volumes:
+            - nfs-tubearchivist-es:/usr/share/elasticsearch/data
+          expose:
+            - "9200"
+      volumes:
+        nfs-tubearchivist-es:
+        nfs-tubearchivist-redis:
+        nfs-tubearchivist-cache:
+        nfs-tubearchivist-media:
+  register: output

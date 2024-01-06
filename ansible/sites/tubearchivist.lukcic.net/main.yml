@@ -1,0 +1,19 @@
+---
+- hosts: localhost
+  gather_facts: no
+
+  tasks:
+    - name: Get site path
+      shell: pwd
+      register: site_directory
+
+- import_playbook: ../../roles/common/main.yml
+  vars:
+    site_dir: "{{ hostvars['localhost']['site_directory'].stdout }}"
+
+- hosts: lxc_ansible
+  become: true
+  gather_facts: yes
+  roles:
+    - role: docker
+    - role: tube-archivist

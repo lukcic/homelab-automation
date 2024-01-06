@@ -9,3 +9,5 @@
   roles:
     - role: common/packages
     - role: common/users
+    - role: common/networking
+    - role: common/proxmox-agent

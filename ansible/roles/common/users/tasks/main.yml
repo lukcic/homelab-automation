@@ -1,34 +1,26 @@
-#- include_vars: ./vars.yml
-
 - name: Create user groups
   group:
-    name: '{{ item.name }}'
+    name: "{{ item.name }}"
     state: present
-  with_items: '{{ all_groups }}'
+  with_items: "{{ all_groups }}"
 
 - name: Create basic users accounts
   user:
-    name: '{{ item.name }}'
-    groups: '{{ item.groups }}'
-    shell: '{{ item.shell }}'
+    name: "{{ item.name }}"
+    groups: "{{ item.groups }}"
+    shell: "{{ item.shell }}"
     append: yes
-  with_items: '{{ all_users }}'
+  with_items: "{{ all_users }}"
 
 - name: Sudo without password for wheel group
   copy:
-    content: '%wheel ALL=(ALL:ALL) NOPASSWD:ALL'
+    content: "%wheel ALL=(ALL:ALL) NOPASSWD:ALL"
     dest: /etc/sudoers.d/wheel-nopasswd
     mode: 0440
 
 - name: Add SSH authorized keys to users
   include_tasks: add_ssh_keys.yml
-  loop: '{{ all_users }}'
+  loop: "{{ all_users }}"
   loop_control:
     loop_var: user
   when: user.shell != "/usr/sbin/nologin"
-
-# - name: DBUS is persistent for user
-#   include_tasks: persistent-dbus-for-user.yml
-#   loop: '{{ all_users }}'
-#   loop_control:
-#     loop_var: user
