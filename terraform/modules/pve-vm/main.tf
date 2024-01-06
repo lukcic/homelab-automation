@@ -19,7 +19,7 @@ resource "proxmox_vm_qemu" "prox-vm" {
   scsihw = "virtio-scsi-pci"
 
   onboot = var.settings.onboot
-  #agent  = 1
+  agent  = 0
   #cpu     = "kvm64"
   #numa    = true
   #hotplug = "network,disk,cpu,memory"

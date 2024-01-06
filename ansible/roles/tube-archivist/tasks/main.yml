@@ -1,42 +1,6 @@
-- name: NFS volume ES
-  docker_volume:
-    driver: "local"
-    driver_options:
-      type: nfs
-      o: "addr=192.168.254.100,rw,nfsvers=4"
-      device: :/tubearchivist/es
-    volume_name: nfs-tubearchivist-es
 #'type=volume,dst=/mnt,volume-driver=local,volume-opt=type=nfs,volume-opt=device=:/tubearchivist,
 #"volume-opt=o=addr=192.168.254.100,rw,nfsvers=4"'
 #docker volume create --driver local --opt type=nfs --opt o=addr=192.168.254.100,rw --opt device=:/tubearchivist ta-nfs
-
-- name: NFS volume Media
-  docker_volume:
-    driver: "local"
-    driver_options:
-      type: nfs
-      o: "addr=192.168.254.100,rw,nfsvers=4"
-      device: :/tubearchivist/media
-    volume_name: nfs-tubearchivist-media
-
-- name: NFS volume Redis
-  docker_volume:
-    driver: "local"
-    driver_options:
-      type: nfs
-      o: "addr=192.168.254.100,rw,nfsvers=4"
-      device: :/tubearchivist/redis
-    volume_name: nfs-tubearchivist-redis
-
-- name: NFS volume Cache
-  docker_volume:
-    driver: "local"
-    driver_options:
-      type: nfs
-      o: "addr=192.168.254.100,rw,nfsvers=4"
-      device: :/tubearchivist/cache
-    volume_name: nfs-tubearchivist-cache
-
 - name: Start compose
   community.docker.docker_compose:
     project_name: tubearchivist
@@ -101,7 +65,27 @@
             - "9200"
       volumes:
         nfs-tubearchivist-es:
+          driver: "local"
+          driver_opts:
+            type: nfs
+            o: "addr=192.168.254.100,rw,nfsvers=4"
+            device: ":/tubearchivist/es"
         nfs-tubearchivist-redis:
+          driver: "local"
+          driver_opts:
+            type: nfs
+            o: "addr=192.168.254.100,rw,nfsvers=4"
+            device: ":/tubearchivist/redis"
         nfs-tubearchivist-cache:
+          driver: "local"
+          driver_opts:
+            type: nfs
+            o: "addr=192.168.254.100,rw,nfsvers=4"
+            device: ":/tubearchivist/cache"
         nfs-tubearchivist-media:
+          driver: "local"
+          driver_opts:
+            type: nfs
+            o: "addr=192.168.254.100,rw,nfsvers=4"
+            device: ":/tubearchivist/media"
   register: output
