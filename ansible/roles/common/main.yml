@@ -1,7 +1,7 @@
 - name: Set variables
   hosts: localhost
   tasks:
-    - include_vars: '{{ site_dir }}/vars.yml'
+    - include_vars: "{{ site_dir }}/vars.yml"
 
 - hosts: lxc_root
   become: true

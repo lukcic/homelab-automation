@@ -47,5 +47,6 @@ resource "proxmox_lxc" "container" {
   provisioner "local-exec" {
     working_dir = var.local_provisioner.working_dir
     command     = var.local_provisioner.command
+    environment = var.local_provisioner.environment
   }
 }

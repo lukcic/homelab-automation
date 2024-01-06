@@ -20,7 +20,7 @@ module "pve-ct" {
   }
   local_provisioner = {
     working_dir = "${path.root}/../../../../ansible/sites/ns1.lukcic.net"
-    command     = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory main.yml"
+    command     = "ANSIBLE_HOST_KEY_CHECKING=False ANSIBLE_CONFIG=../../ansible.cfg ansible-playbook -i inventory main.yml"
   }
   depends_on = [local_file.ansible_inventory]
 }

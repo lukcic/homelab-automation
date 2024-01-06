@@ -16,4 +16,4 @@
   gather_facts: yes
   roles:
     - role: common/networking
-    - role: named
+    - role: docker

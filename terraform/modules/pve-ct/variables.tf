@@ -76,8 +76,9 @@ variable "remote_provisioner_commands" {
 
 variable "local_provisioner" {
   type = object({
-    working_dir = optional(string)
-    command     = optional(string)
+    working_dir = optional(string),
+    command     = optional(string),
+    environment = optional(any)
   })
   default = {}
 }
