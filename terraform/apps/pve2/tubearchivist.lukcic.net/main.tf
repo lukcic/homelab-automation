@@ -38,8 +38,8 @@ module "pve-ct" {
 
 resource "local_file" "ansible_inventory" {
   content = <<EOF
-lxc_root ansible_host=${local.ip} ansible_user=debian ansible_private_key_file=~/.ssh/proxmox-lxc-root.pem
-lxc_ansible ansible_host=${local.ip} ansible_user=ansible ansible_private_key_file=~/.ssh/ansible-key-ecdsa.pem
+vm_root ansible_host=${local.ip} ansible_user=debian ansible_private_key_file=~/.ssh/proxmox-lxc-root.pem
+vm_ansible ansible_host=${local.ip} ansible_user=ansible ansible_private_key_file=~/.ssh/ansible-key-ecdsa.pem
   EOF
 
   filename = "${var.project_root}/ansible/sites/${local.app-name}.lukcic.net/inventory-${local.app-name}"

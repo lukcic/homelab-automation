@@ -4,7 +4,7 @@ sites/*/vars.yml
 
 *.pem
 *.pub
-inventory
+inventory*
 *.tfvars
 .terraform
 terraform.tfstate

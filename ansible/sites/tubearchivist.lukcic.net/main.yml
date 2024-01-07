@@ -11,7 +11,7 @@
   vars:
     site_dir: "{{ hostvars['localhost']['site_directory'].stdout }}"
 
-- hosts: lxc_ansible
+- hosts: vm_ansible
   become: true
   gather_facts: yes
   roles:
