@@ -15,5 +15,6 @@
   become: true
   gather_facts: yes
   roles:
-    - role: common/networking
-    - role: docker
+    - common/networking
+    - docker
+    - common/shell

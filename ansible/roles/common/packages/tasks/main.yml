@@ -9,6 +9,9 @@
 - name: Install required system packages
   apt:
     pkg:
+      - git
+      - gh
+      - tldr
       - sudo
       - apt-transport-https
       - ca-certificates

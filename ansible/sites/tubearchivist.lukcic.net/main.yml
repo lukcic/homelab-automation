@@ -15,5 +15,6 @@
   become: true
   gather_facts: yes
   roles:
-    - role: docker
-    - role: tube-archivist
+    - docker
+    - tube-archivist
+    - common/shell
