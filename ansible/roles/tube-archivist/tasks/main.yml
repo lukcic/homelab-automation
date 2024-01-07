@@ -1,6 +1,3 @@
-#'type=volume,dst=/mnt,volume-driver=local,volume-opt=type=nfs,volume-opt=device=:/tubearchivist,
-#"volume-opt=o=addr=192.168.254.100,rw,nfsvers=4"'
-#docker volume create --driver local --opt type=nfs --opt o=addr=192.168.254.100,rw --opt device=:/tubearchivist ta-nfs
 - name: Start compose
   community.docker.docker_compose:
     project_name: tubearchivist

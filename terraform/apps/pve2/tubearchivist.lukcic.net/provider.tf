@@ -10,9 +10,9 @@ terraform {
   }
   backend "s3" {
     bucket         = "lukcic-homelab-terrafrom-state"
-    key            = "docker01.lukcic.net"
+    key            = "tubearchivist.lukcic.net"
     region         = "eu-north-1"
-    dynamodb_table = "lukcic-homelab-terrafrom-lock-docker01"
+    dynamodb_table = "lukcic-homelab-terrafrom-lock-tubearchivist"
     encrypt        = true
   }
 }
