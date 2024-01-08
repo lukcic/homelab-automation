@@ -16,5 +16,3 @@ variable "container_password" {
   type      = string
   sensitive = true
 }
-
-
