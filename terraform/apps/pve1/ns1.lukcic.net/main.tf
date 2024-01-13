@@ -1,12 +1,13 @@
 locals {
-  app-name = "docker01"
-  ip       = "192.168.254.80"
+  app-name = "ns1"
+  ip       = "192.168.254.53"
 }
 
 module "pve-ct" {
   source = "../../../modules/pve-ct"
 
-  container_id       = 25480
+  container_id       = 25453
+  target_node        = "pve1"
   hostname           = "${local.app-name}.lukcic.net"
   container_password = var.container_password
 
@@ -15,13 +16,23 @@ module "pve-ct" {
   ssh_conn_private_key = "~/.ssh/proxmox-lxc-root.pem"
 
   settings = {
-    protection = false
+    protection = true
+  }
+
+  hardware = {
+    memory  = 512
+    balloon = 512
+  }
+
+  rootfs = {
+    size    = "10G"
+    storage = "local-lvm"
   }
 
   network = {
     ip  = local.ip
     gw  = "192.168.254.254"
-    dns = "192.168.254.20"
+    dns = "1.1.1.1"
     tag = "254"
   }
 
@@ -32,7 +43,8 @@ module "pve-ct" {
       ANSIBLE_CONFIG     = "${var.project_root}/ansible/ansible.cfg"
       ANSIBLE_ROLES_PATH = "${var.project_root}/ansible/roles"
     }
-    command = "ansible-playbook -v main.yml"
+
+    command = "ansible-playbook main.yml"
   }
 
   depends_on = [local_file.ansible_inventory]
@@ -47,13 +59,3 @@ lxc_ansible ansible_host=${local.ip} ansible_user=ansible ansible_private_key_fi
   filename = "${var.project_root}/ansible/sites/${local.app-name}.lukcic.net/inventory-${local.app-name}"
 }
 
-resource "dns_a_record_set" "docker01" {
-  zone = "lukcic.net."
-  name = "docker01"
-  addresses = [
-    local.ip
-  ]
-  ttl = 86400
-
-  depends_on = [module.pve-ct]
-}

@@ -2,8 +2,54 @@
   apt:
     pkg:
       - bind9
-      - bind9utils 
+      - bind9utils
       - bind9-doc
     state: latest
     update_cache: true
   run_once: true
+
+- name: Copy Bind configuration
+  copy:
+    src: "{{ role_path }}/files/{{ item }}"
+    dest: "/etc/bind/{{ item }}"
+    owner: root
+    group: bind
+    mode: 0644
+  with_items:
+    - "lukcic-net.zone"
+    - "named.conf.options"
+    - "rndc.conf"
+    - "tsig.key"
+  register: bindconfigchange
+
+- name: Update /etc/bind permissions
+  shell: chmod g+w /etc/bind
+
+- name: Create log directory
+  file:
+    path: /var/log/bind
+    state: directory
+    owner: bind
+
+- name: Check config
+  shell: named-checkconf /etc/bind/named.conf
+  ignore_errors: true
+
+- name: Enable named service
+  service:
+    name: named
+    enabled: true
+    state: started
+
+- name: Sync Bind journal cron
+  cron:
+    name: "sync bind journal"
+    special_time: hourly
+    job: "rndc sync"
+    user: bind
+
+- name: Restart Bind when config change
+  service:
+    name: named
+    state: restarted
+  when: bindconfigchange.changed

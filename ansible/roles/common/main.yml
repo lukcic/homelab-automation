@@ -16,6 +16,7 @@
   become: true
   gather_facts: yes
   roles:
-    - role: common/packages
-    - role: common/users
-    - role: common/networking
+    - common/packages
+    - common/networking
+    - common/users
+    - common/shell

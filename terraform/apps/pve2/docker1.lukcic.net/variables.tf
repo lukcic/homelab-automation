@@ -20,3 +20,8 @@ variable "container_password" {
 variable "project_root" {
   type = string
 }
+
+variable "rndc_key" {
+  type      = string
+  sensitive = true
+}

@@ -1,0 +1,19 @@
+- name: Create aliases for root
+  lineinfile:
+    path: /root/.bashrc
+    line: "alias {{ item.key }}=\u0027{{ item.value }}\u0027"
+    owner: root
+    state: present
+    insertafter: EOF
+    create: true
+  with_dict: "{{ aliases }}"
+
+- name: Create aliases for lukcic
+  lineinfile:
+    path: /home/lukcic/.bashrc
+    line: "alias {{ item.key }}=\u0027{{ item.value }}\u0027"
+    owner: lukcic
+    state: present
+    insertafter: EOF
+    create: true
+  with_dict: "{{ aliases }}"

@@ -86,3 +86,6 @@
   user:
     name: lukcic
     shell: /usr/bin/zsh
+
+- name: Add aliasses
+  include_tasks: "{{ role_path }}/tasks/aliases.yml"

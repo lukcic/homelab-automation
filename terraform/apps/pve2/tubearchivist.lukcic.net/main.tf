@@ -6,14 +6,13 @@ locals {
 module "pve-ct" {
   source = "../../../modules/pve-vm"
 
-  hostname = local.app-name
   vmid     = 25490
+  hostname = local.app-name
 
   hardware = {
     memory  = 4096
     balloon = 2048
   }
-
 
   ssh_conn_private_key = "~/.ssh/proxmox-lxc-root.pem"
 

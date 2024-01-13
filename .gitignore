@@ -1,6 +1,7 @@
 .DS_Store
 sites/*/vars.yml
 .log
+tsig.key
 
 *.pem
 *.pub
