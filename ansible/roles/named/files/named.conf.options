@@ -15,10 +15,10 @@ options {
                 "trusted_clients";
         };
 
-        recursion yes;                  # enables resursive queries
-        allow-recursion { trusted_clients; };   # allows recursive queries from "trusted_clients" clients
-        listen-on { 192.168.254.53; 127.0.0.1;};  # ns1 private IP address - listen on private network only
-        allow-transfer { none; };       # disable zone transfers by default
+        recursion yes;
+        allow-recursion { trusted_clients; }; 
+        listen-on { 192.168.254.53; 127.0.0.1;};
+        allow-transfer { none; };
 
         forwarders {
                 87.204.204.204;
@@ -32,12 +32,6 @@ options {
 controls {
         inet 127.0.0.1 port 953
         allow { 127.0.0.1; } keys { "tsig-key"; };
-};
-
-zone "lukcic.net" IN {
-  type master;
-  file "/etc/bind/lukcic-net.zone";
-  update-policy { grant tsig-key zonesub any; };
 };
 
 logging {
@@ -66,14 +60,13 @@ logging {
         print-time yes;
         severity info;
         };
-    channel slog {
-        syslog security;
-        severity info;
-    };
+        channel slog {
+                syslog security;
+                severity info;
+        };
         category xfer-out { transfers; slog; };
         category xfer-in { transfers; slog; };
         category notify { notify; };
-
         category lame-servers { general; };
         category config { general; };
         category default { general; };
@@ -81,4 +74,16 @@ logging {
         category dnssec { dnssec; };
 
         // category queries { query; };
+};
+
+zone "lukcic.net" IN {
+  type master;
+  file "/etc/bind/db.lukcic.net";
+  update-policy { grant tsig-key zonesub any; };
+};
+
+zone "254.168.192.in-addr.arpa" IN {
+  type master;
+  file "/etc/bind/db.254.168.192";
+  update-policy { grant tsig-key zonesub any; };
 };

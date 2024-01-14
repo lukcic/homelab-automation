@@ -1,0 +1,24 @@
+$ORIGIN lukcic.net.
+$TTL 86400	; 1 day
+@	IN SOA	ns1.lukcic.net. admin.lukcic.net. (
+				2001062618 ; serial
+				3600       ; refresh (1 hour)
+				3600       ; retry (1 hour)
+				2419200    ; expire (4 weeks)
+				3600       ; minimum (1 hour)
+				)
+				
+@				IN	NS	ns1.lukcic.net.
+pve1			IN	A	192.168.254.10
+observability	IN	A	192.168.254.12
+unifi			IN	A	192.168.254.15
+adguard			IN	A	192.168.254.20
+sw0				IN	A	192.168.254.25
+pve2			IN	A	192.168.254.33
+pve3			IN	A	192.168.254.40
+ns1				IN	A	192.168.254.53
+docker01		IN	A	192.168.254.80
+tubearchivist	IN	A	192.168.254.90
+qnap			IN	A	192.168.254.100
+nas				IN	A	192.168.254.200
+fw				IN	A	192.168.254.254
