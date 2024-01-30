@@ -28,14 +28,14 @@ variable "container_id" {
 }
 
 variable "network" {
-  type = object({
+  type = list(object({
     name   = optional(string, "eth0")
     bridge = optional(string, "vmbr254")
     ip     = optional(string, "dhcp")
     gw     = optional(string)
     tag    = optional(string)
     dns    = optional(string)
-  })
+  }))
 }
 
 variable "settings" {

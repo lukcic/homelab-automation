@@ -18,14 +18,25 @@ resource "proxmox_lxc" "container" {
     size    = var.rootfs.size
   }
 
-  nameserver = var.network.dns
+  nameserver = var.network[0].dns
 
-  network {
-    name   = var.network.name
-    bridge = var.network.bridge
-    ip     = format("%s/24", var.network.ip)
-    gw     = var.network.gw
-    tag    = var.network.tag
+  # network {
+  #   name   = var.network.name
+  #   bridge = var.network.bridge
+  #   ip     = format("%s/24", var.network.ip)
+  #   gw     = var.network.gw
+  #   tag    = var.network.tag
+  # }
+
+  dynamic "network" {
+    for_each = var.network #!= null ? var.network : {}
+    content {
+      name   = network.value.name
+      bridge = network.value.bridge
+      ip     = format("%s/24", network.value.ip)
+      gw     = network.value.gw
+      tag    = network.value.tag
+    }
   }
 
   features {
@@ -33,7 +44,7 @@ resource "proxmox_lxc" "container" {
   }
 
   connection {
-    host        = var.network.ip
+    host        = var.network[0].ip
     user        = "root"
     private_key = file(var.ssh_conn_private_key)
     agent       = false

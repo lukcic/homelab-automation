@@ -2,6 +2,7 @@
 sites/*/vars.yml
 .log
 tsig.key
+ansible/roles/proxy/vars/main.yml
 
 *.pem
 *.pub
