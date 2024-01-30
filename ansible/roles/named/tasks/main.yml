@@ -64,9 +64,10 @@
   when:
     - bind_config_change
     - zone_config_change
-# - name: Sync Bind journal cron
-#   cron:
-#     name: "sync bind journal"
-#     special_time: hourly
-#     job: "rndc sync"
-#     user: bind
+
+- name: Sync Bind journal cron
+  cron:
+    name: "sync bind journal"
+    special_time: hourly
+    job: "rndc sync"
+    user: bind

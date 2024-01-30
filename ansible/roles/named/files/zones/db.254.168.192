@@ -1,4 +1,5 @@
 $TTL	604800
+$ORIGIN 254.168.192.IN-ADDR.ARPA.
 @	IN	SOA	ns1.lukcic.net. admin.lukcic.net. (
 			      1		; Serial
 			 604800		; Refresh
