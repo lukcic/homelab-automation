@@ -1,3 +1,6 @@
+#move it to the pve1 and add second nic in 33 network
+
+
 locals {
   app-name = "docker01"
   ip       = "192.168.254.80"
@@ -18,12 +21,12 @@ module "pve-ct" {
     protection = false
   }
 
-  network = {
+  network = [{
     ip  = local.ip
     gw  = "192.168.254.254"
     dns = "192.168.254.20"
     tag = "254"
-  }
+  }]
 
   local_provisioner = {
     working_dir = "${var.project_root}/ansible/sites/${local.app-name}.lukcic.net"
@@ -54,6 +57,15 @@ resource "dns_a_record_set" "docker01" {
     local.ip
   ]
   ttl = 86400
+
+  depends_on = [module.pve-ct]
+}
+
+resource "dns_ptr_record" "docker01" {
+  zone = "254.168.192.in-addr.arpa."
+  name = "80"
+  ptr  = "docker01.lukcic.net."
+  ttl  = 604800
 
   depends_on = [module.pve-ct]
 }
