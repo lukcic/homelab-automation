@@ -19,3 +19,5 @@
     - docker
     - common/shell
     - homer
+    - portainer
+    - semaphore

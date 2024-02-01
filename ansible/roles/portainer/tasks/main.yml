@@ -1,0 +1,22 @@
+- name: Start compose
+  community.docker.docker_compose:
+    project_name: portainer
+    definition:
+      version: "3.5"
+      services:
+        portainer:
+          container_name: portainer
+          image: portainer/portainer-ce:2.19.4
+          ports:
+            - 9000:9000
+            - 9443:9443
+            - 8000:8000
+          volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+            - portainer-data:/data
+          restart: unless-stopped
+      volumes:
+        portainer-data:
+          driver: local
+  tags:
+    - portainer
