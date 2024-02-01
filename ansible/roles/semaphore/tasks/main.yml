@@ -1,0 +1,24 @@
+- name: Start compose
+  community.docker.docker_compose:
+    project_name: ansible
+    definition:
+      version: "3.5"
+      volumes:
+        semaphore-config:
+        semaphore-db:
+      services:
+        semaphore:
+          ports:
+            - 3000:3000
+          image: semaphoreui/semaphore:v2.9.45
+          environment:
+            SEMAPHORE_DB_DIALECT: bolt
+            SEMAPHORE_ADMIN_PASSWORD: "{{ admin_password }}"
+            SEMAPHORE_ADMIN_NAME: lukcic
+            SEMAPHORE_ADMIN_EMAIL: admin@lukcic.net
+            SEMAPHORE_ADMIN: lukcic
+          volumes:
+            - semaphore-config:/etc/semaphore
+            - semaphore-db:/var/lib/semaphore # database.boltdb location
+  tags:
+    - semaphore
