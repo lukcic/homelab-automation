@@ -10,7 +10,7 @@
     - role: common/packages
     - role: common/users
     - role: common/networking
-    - role: common/proxmox-agent
+    #- role: common/proxmox-agent
 
 - hosts: lxc_root
   become: true

@@ -3,7 +3,7 @@ locals {
   ip       = "192.168.254.90"
 }
 
-module "pve-ct" {
+module "pve-vm" {
   source = "../../../modules/pve-vm"
 
   vmid     = 25490

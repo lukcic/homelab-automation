@@ -1,7 +1,7 @@
 variable "proxmox_host" {
   type = map(any)
   default = {
-    pm_api_url  = "https://pve2.lukcic.net:8006/api2/json"
+    pm_api_url  = "https://192.168.254.33:8006/api2/json"
     pm_user     = "root@pam"
     target_node = "pve2"
     token_id    = "root@pam!root_token"

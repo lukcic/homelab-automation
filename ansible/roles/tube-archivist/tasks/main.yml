@@ -65,24 +65,24 @@
           driver: "local"
           driver_opts:
             type: nfs
-            o: "addr=192.168.254.100,rw,nfsvers=4"
-            device: ":/tubearchivist/es"
+            o: "addr=192.168.254.200,rw,nfsvers=4"
+            device: ":/mnt/main/docker-volumes/tubearchivist/es"
         nfs-tubearchivist-redis:
           driver: "local"
           driver_opts:
             type: nfs
-            o: "addr=192.168.254.100,rw,nfsvers=4"
-            device: ":/tubearchivist/redis"
+            o: "addr=192.168.254.200,rw,nfsvers=4"
+            device: ":/mnt/main/docker-volumes/tubearchivist/redis"
         nfs-tubearchivist-cache:
           driver: "local"
           driver_opts:
             type: nfs
-            o: "addr=192.168.254.100,rw,nfsvers=4"
-            device: ":/tubearchivist/cache"
+            o: "addr=192.168.254.200,rw,nfsvers=4"
+            device: ":/mnt/main/docker-volumes/tubearchivist/cache"
         nfs-tubearchivist-media:
           driver: "local"
           driver_opts:
             type: nfs
-            o: "addr=192.168.254.100,rw,nfsvers=4"
-            device: ":/tubearchivist/media"
+            o: "addr=192.168.254.200,rw,nfsvers=4"
+            device: ":/mnt/main/docker-volumes/tubearchivist/media"
   register: output
