@@ -7,16 +7,16 @@
   become: true
   gather_facts: yes
   roles:
-    - role: common/packages
-    - role: common/users
-    - role: common/networking
+    - role: packages
+    - role: users
+    - role: networking
     #- role: common/proxmox-agent
 
 - hosts: lxc_root
   become: true
   gather_facts: yes
   roles:
-    - common/packages
-    - common/networking
-    - common/users
-    - common/shell
+    - packages
+    - networking
+    - users
+    - shell
