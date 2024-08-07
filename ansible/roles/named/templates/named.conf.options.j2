@@ -84,18 +84,11 @@ zone "{{ entry['reverse'] }}.in-addr.arpa" IN {
     update-policy { grant tsig-key zonesub any; };
 };
 
-zone "{{ entry['domain'] }}" IN {
-    type master;
-    file "/etc/bind/db.{{ entry['domain'] }}";
-    update-policy { grant tsig-key zonesub any; };
-};
-
-{% else %}
-zone "{{ entry['domain'] }}" IN {
-    type master;
-    file "/etc/bind/db.{{ entry['domain'] }}";
-    update-policy { grant tsig-key zonesub any; };
-};
-
 {% endif %}
+zone "{{ entry['domain'] }}" IN {
+    type master;
+    file "/etc/bind/db.{{ entry['domain'] }}";
+    update-policy { grant tsig-key zonesub any; };
+};
+
 {% endfor %}
