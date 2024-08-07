@@ -76,11 +76,7 @@ logging {
         // category queries { query; };
 };
 
-zone "{{ item.reverse if item.reverse is defined else item.domain }}" IN {
-    type master;
-    file "/etc/bind/db.{{ item.reverse if item.reverse is defined else item.domain }}";
-    update-policy { grant tsig-key zonesub any; };
-};
+
 
 #############################
 zone "lukcic.net" IN {

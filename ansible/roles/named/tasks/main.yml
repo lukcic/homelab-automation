@@ -1,54 +1,9 @@
-- name: Install required package
-  apt:
-    pkg:
-      - bind9
-      - bind9utils
-      - bind9-doc
-    state: latest
-    update_cache: true
-  run_once: true
+- name: Install packages
+  include_tasks: install.yml
 
-- name: Create BIND configuration from template
-  template:
-    src: "templates/named.conf.options.j2"
-    dest: "../../roles/named/files/config/named.conf.options"
-  loop:
-    "{{ zones }}"
-    # - "rndc.conf"
-    # - "tsig.key"
-  become: false
-  delegate_to: localhost
-  tags:
-    - templates
-
-- name: Set timestamp
-  set_fact:
-    current_timestamp: "{{ '%Y%m%d%H%M%S' | strftime }}"
-  become: false
-  delegate_to: localhost
-  tags:
-    - templates
-
-- name: Create forward zone files from templates
-  template:
-    src: "templates/db.forward.zone.j2"
-    dest: "../../roles/named/files/zones/db.{{ item.domain }}"
-  loop: "{{ zones }}"
-  become: false
-  delegate_to: localhost
-  tags:
-    - templates
-
-- name: Create reverse zone files from templates
-  template:
-    src: "templates/db.reverse.zone.j2"
-    dest: "../../roles/named/files/zones/db.{{ item.reverse or item.domain }}"
-  loop: "{{ zones }}"
-  when: item.reverse is defined
-  become: false
-  delegate_to: localhost
-  tags:
-    - templates
+- name: Generate config from templates
+  include_tasks: templates.yml
+  tags: templates
 
 - name: Copy Bind configuration
   copy:

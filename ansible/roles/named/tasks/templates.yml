@@ -1,0 +1,47 @@
+- include_vars: "{{ site_dir }}/vars.yml"
+- include_vars: vars/main.yml
+
+- name: Set timestamp
+  set_fact:
+    current_timestamp: "{{ '%Y%m%d%H%M%S' | strftime }}"
+  become: false
+  delegate_to: localhost
+  tags: templates
+
+- name: Create forward zone files from templates
+  template:
+    src: "templates/db.forward.zone.j2"
+    dest: "{{ role_path }}/files/zones/db.{{ item.domain }}"
+  loop: "{{ zones }}"
+  become: false
+  delegate_to: localhost
+  tags: templates
+
+- name: Create reverse zone files from templates
+  template:
+    src: "templates/db.reverse.zone.j2"
+    dest: "{{ role_path }}/files/zones/db.{{ item.reverse or item.domain }}"
+  loop: "{{ zones }}"
+  when: item.reverse is defined
+  become: false
+  delegate_to: localhost
+  tags: templates
+
+- name: Create main BIND configuration from template
+  template:
+    src: "templates/named.conf.options.j2"
+    dest: "{{ role_path }}/files/config/named.conf.options"
+  loop: "{{ zones }}"
+  become: false
+  delegate_to: localhost
+  tags: templates
+
+- name: Create zones configuration in conf.options
+  blockinfile:
+    dest: "{{ role_path }}/files/config/named.conf.options"
+    block: "{{ lookup('template', 'named.conf.options.zone.j2') }}"
+    #marker: "; {mark} ANSIBLE MANAGED BLOCK FOR {{ cust }}"
+  #loop: "{{ zones }}"
+  become: false
+  delegate_to: localhost
+  tags: templates
