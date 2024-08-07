@@ -13,4 +13,4 @@ all_users:
 
   - name: lukcic
     groups: wheel
-    shell: /bin/bash
+    shell: /usr/bin/zsh

@@ -7,8 +7,7 @@ $TTL 86400	; 1 day
 				2419200    ; expire (4 weeks)
 				3600       ; minimum (1 hour)
 				)
-@				NS	ns1.{{ item.domain }}.
-@				NS	ns2.{{ item.domain }}.
+@	NS	ns1
 {% for entry in item.entries %}
 {% for name, ip in entry.items() %}
 {{ name | indent }}		A	{{ ip }}

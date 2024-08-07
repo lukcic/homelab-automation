@@ -1,16 +1,15 @@
-$ORIGIN {{ item.reverse }}.
+$ORIGIN {{ item.reverse }}.IN-ADDR.ARPA.
 $TTL 86400	; 1 day
 @	IN	SOA	ns1.{{ item.domain }}. admin.{{ item.domain }}. (
-    {{ current_timestamp }} ; serial
+            {{ current_timestamp }} ; serial
 			 604800		; Refresh
 			  86400		; Retry
 			2419200		; Expire
 			 604800 )	; Negative Cache TTL
 ;
-@	    NS	ns1.{{ item.domain }}.
-@	    NS	ns2.{{ item.domain }}.
+@   NS	ns1.
 {% for entry in item.entries %}
 {% for name, ip in entry.items() %}
-{{ ip | indent }}		PTR     {{ name }}.{{ item.domain }}.
+{{ ip.split('.')[-1] | indent }}		PTR     {{ name }}.{{ item.domain }}.
 {% endfor %}
 {% endfor %}

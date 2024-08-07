@@ -7,7 +7,7 @@
 
 - name: Copy Bind configuration
   copy:
-    src: "{{ role_path }}/files/{{ item }}"
+    src: "{{ role_path }}/files/config/{{ item }}"
     dest: "/etc/bind/{{ item }}"
     owner: root
     group: bind
@@ -29,23 +29,16 @@
 
 - name: Check config
   shell: named-checkconf /etc/bind/named.conf
-  ignore_errors: true
 
-- name: Check if zone file exists
-  stat:
-    path: "/etc/bind/db.{{ item.domain }}"
-  with_items: "{{ zones }}"
-  register: check_zone_file
-
-- name: Copy zones configuration
+- name: Copy zone files
   copy:
-    src: "{{ role_path }}/files/zones/{{ item.item.file }}"
-    dest: "/etc/bind/{{ item.item.file }}"
+    src: "{{ role_path }}/files/zones/"
+    dest: "/etc/bind/"
     owner: root
     group: bind
     mode: 0644
-  when: not item.stat.exists
-  with_items: "{{ check_zone_file.results }}"
+    backup: yes
+    force: true
   register: zone_config_change
 
 - name: Enable named service

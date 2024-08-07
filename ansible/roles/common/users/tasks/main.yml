@@ -11,6 +11,7 @@
     shell: "{{ item.shell }}"
     append: yes
   with_items: "{{ all_users }}"
+  register: users_created
 
 - name: Sudo without password for wheel group
   copy:

@@ -1,9 +1,8 @@
-- include_vars: "{{ site_dir }}/vars.yml"
 - include_vars: vars/main.yml
 
 - name: Set timestamp
   set_fact:
-    current_timestamp: "{{ '%Y%m%d%H%M%S' | strftime }}"
+    current_timestamp: "{{ '%y%m%d%H%M' | strftime }}"
   become: false
   delegate_to: localhost
   tags: templates
@@ -31,17 +30,6 @@
   template:
     src: "templates/named.conf.options.j2"
     dest: "{{ role_path }}/files/config/named.conf.options"
-  loop: "{{ zones }}"
-  become: false
-  delegate_to: localhost
-  tags: templates
-
-- name: Create zones configuration in conf.options
-  blockinfile:
-    dest: "{{ role_path }}/files/config/named.conf.options"
-    block: "{{ lookup('template', 'named.conf.options.zone.j2') }}"
-    #marker: "; {mark} ANSIBLE MANAGED BLOCK FOR {{ cust }}"
-  #loop: "{{ zones }}"
   become: false
   delegate_to: localhost
   tags: templates

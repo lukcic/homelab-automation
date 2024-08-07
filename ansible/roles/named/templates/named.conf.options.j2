@@ -76,17 +76,26 @@ logging {
         // category queries { query; };
 };
 
-
-
-#############################
-zone "lukcic.net" IN {
-  type master;
-  file "/etc/bind/db.lukcic.net";
-  update-policy { grant tsig-key zonesub any; };
+{% for entry in zones %}
+{% if 'reverse' in entry %}
+zone "{{ entry['reverse'] }}.in-addr.arpa" IN {
+    type master;
+    file "/etc/bind/db.{{ entry['reverse'] }}";
+    update-policy { grant tsig-key zonesub any; };
 };
 
-zone "254.168.192.in-addr.arpa" IN {
-  type master;
-  file "/etc/bind/db.254.168.192";
-  update-policy { grant tsig-key zonesub any; };
+zone "{{ entry['domain'] }}" IN {
+    type master;
+    file "/etc/bind/db.{{ entry['domain'] }}";
+    update-policy { grant tsig-key zonesub any; };
 };
+
+{% else %}
+zone "{{ entry['domain'] }}" IN {
+    type master;
+    file "/etc/bind/db.{{ entry['domain'] }}";
+    update-policy { grant tsig-key zonesub any; };
+};
+
+{% endif %}
+{% endfor %}
