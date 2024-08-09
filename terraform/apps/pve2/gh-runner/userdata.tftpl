@@ -1,0 +1,26 @@
+#!/bin/bash -xe
+apt-get update
+apt-get install -y ca-certificates curl gnupg
+mkdir -p /etc/apt/keyrings
+curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
+echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_${node_ver}.x nodistro main" | sudo tee /etc/apt/sources.list.d/nodesource.list
+curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | sudo tee /usr/share/keyrings/yarnkey.gpg >/dev/null
+echo "deb [signed-by=/usr/share/keyrings/yarnkey.gpg] https://dl.yarnpkg.com/debian stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+
+apt update && apt upgrade -y
+apt install jq git-lfs docker.io make g++ postgresql libpq-dev nodejs yarn -y
+usermod -aG docker ubuntu && newgrp docker
+systemctl disable --now postgresql.service
+yarn --version
+node --version
+
+mkdir /actions-runner
+cd /actions-runner || { echo "ERROR! No /actions-runner found.."; exit 1; }
+curl -o actions-runner-linux-x64-${runner_ver}.tar.gz -L https://github.com/actions/runner/releases/download/v${runner_ver}/actions-runner-linux-x64-${runner_ver}.tar.gz
+tar xzf ./actions-runner-linux-x64-${runner_ver}.tar.gz || { echo "ERROR! Extracting the actions-runner tar"; exit 1; }
+
+useradd actions_runner --create-home --shell /bin/bash
+usermod -aG docker actions_runner && newgrp docker
+chown actions_runner:actions_runner -R /actions-runner
+su actions_runner -c "/actions-runner/config.sh --url ${github_repo_url} --token ${runner_token} --name ${runner_name} --unattended"
+./svc.sh install && ./svc.sh start

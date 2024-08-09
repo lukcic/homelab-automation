@@ -1,0 +1,16 @@
+- name: Install required packages
+  apt:
+    pkg:
+      - ca-certificates
+      - curl
+      - gnupg
+      - jq
+      - git-lfs
+      - make
+      - g++
+      - libpq-dev
+      - ansible
+    state: latest
+    update_cache: true
+  run_once: true
+  tags: install

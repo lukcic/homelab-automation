@@ -1,0 +1,58 @@
+- name: Install packages
+  include_tasks: install.yml
+
+- name: Create actions-runner user
+  user:
+    name: actions_runner
+    shell: /bin/bash
+  register: user_created
+
+- name: Creates actions-runner directory
+  file:
+    path: /actions-runner
+    owner: actions_runner
+    group: actions_runner
+    state: directory
+
+- name: Adding user to wheel group
+  user:
+    name: actions_runner
+    groups:
+      - wheel
+      - docker
+    append: yes
+
+- name: Download actions-runner package
+  get_url:
+    url: "https://github.com/actions/runner/releases/download/v{{ runner_ver }}/actions-runner-linux-x64-{{ runner_ver }}.tar.gz"
+    dest: "/actions-runner/actions-runner-linux-x64-{{ runner_ver }}.tar.gz"
+    mode: "0440"
+    owner: actions_runner
+    group: actions_runner
+
+- name: Extract package
+  unarchive:
+    src: "/actions-runner/actions-runner-linux-x64-{{ runner_ver }}.tar.gz"
+    dest: /actions-runner
+    remote_src: yes
+
+- name: Change file permissions
+  file:
+    dest: /actions-runner
+    owner: actions_runner
+    group: actions_runner
+    recurse: yes
+
+- name: Config and run runner
+  become_user: actions_runner
+  shell:
+    cmd: './config.sh --url "{{ github_repo_url }}" --token {{ runner_token }} --name {{ runner_name }} --unattended'
+  args:
+    chdir: /actions-runner
+
+- name: Install and start service
+  become_user: actions_runner
+  shell:
+    cmd: "sudo ./svc.sh install && sudo ./svc.sh start"
+  args:
+    chdir: /actions-runner
