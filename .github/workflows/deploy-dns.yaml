@@ -44,7 +44,6 @@ jobs:
           configuration: |
             [defaults]
             roles_path=../../roles
-            interpreter_python=auto_silent
             deprecation_warnings=False
             host_key_checking=False
             scp_if_ssh=True
