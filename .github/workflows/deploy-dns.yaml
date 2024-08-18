@@ -46,9 +46,6 @@ jobs:
             roles_path=../../roles
             deprecation_warnings=False
             host_key_checking=False
-            scp_if_ssh=True
-            command_timeout=30
-            pipelining=True
           key: ${{ secrets.ANSIBLE_SSH_PRIVATE_KEY }}
           inventory: |
             lxc_ansible ansible_host=192.168.254.53 ansible_user=ansible
