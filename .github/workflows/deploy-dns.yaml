@@ -52,6 +52,6 @@ jobs:
             pipelining=True
           key: ${{ secrets.ANSIBLE_SSH_PRIVATE_KEY }}
           inventory: |
-            lxc_ansible ansible_host=${{ env.ns1_IP }} ansible_user=ansible
+            lxc_ansible ansible_host=192.168.254.53 ansible_user=ansible
           options: |
             --verbose
