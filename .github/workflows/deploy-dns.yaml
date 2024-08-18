@@ -1,0 +1,48 @@
+name: '[HOMELAB] Deploy DSN Entries'
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ansible/roles/named/vars/main.yml
+
+env:
+  ANSIBLE_FORCE_COLOR: true
+
+jobs:
+  update_dns_zones:
+    timeout-minutes: 20
+    runs-on: self-hosted
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Unlock secrets
+        uses: sliteteam/github-action-git-crypt-unlock@1.3.0
+        env:
+          GIT_CRYPT_KEY: ${{ secrets.GIT_CRYPT_KEY }}
+
+      # - name: Setup SSH
+      #   uses: webfactory/ssh-agent@v0.9.0
+      #   with:
+      #     ssh-private-key: ${{ secrets.ANSIBLE_SSH_PRIVATE_KEY }}
+
+      - name: Run playbook
+        uses: dawidd6/action-ansible-playbook@v2
+        with:
+          playbook: main.yml
+          directory: ./ansible/sites/ns1.lukcic.net
+          configuration: |
+            [defaults]
+            roles_path=../../roles
+            interpreter_python=auto_silent
+            deprecation_warnings=False
+            host_key_checking=False
+            scp_if_ssh=True
+            command_timeout=30
+            pipelining=True
+          key: ${{ secrets.ANSIBLE_SSH_PRIVATE_KEY }}
+          inventory: |
+            lxc_ansible ansible_host=${{ env.ns1_IP }} ansible_user=ansible
+          options: |
+            --verbose
