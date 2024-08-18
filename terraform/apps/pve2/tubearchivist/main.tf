@@ -23,9 +23,9 @@ module "pve-vm" {
   }
 
   local_provisioner = {
-    working_dir = "${var.project_root}/ansible/sites/${local.app-name}.lukcic.net"
+    working_dir = "${var.project_root}/ansible/sites/${local.app-name}"
     environment = {
-      ANSIBLE_INVENTORY  = "${var.project_root}/ansible/sites/${local.app-name}.lukcic.net/inventory-${local.app-name}"
+      ANSIBLE_INVENTORY  = "${var.project_root}/ansible/sites/${local.app-name}/inventory-${local.app-name}"
       ANSIBLE_CONFIG     = "${var.project_root}/ansible/ansible.cfg"
       ANSIBLE_ROLES_PATH = "${var.project_root}/ansible/roles"
     }
@@ -41,5 +41,5 @@ vm_root ansible_host=${local.ip} ansible_user=debian ansible_private_key_file=~/
 vm_ansible ansible_host=${local.ip} ansible_user=ansible ansible_private_key_file=~/.ssh/ansible-key-ecdsa.pem
   EOF
 
-  filename = "${var.project_root}/ansible/sites/${local.app-name}.lukcic.net/inventory-${local.app-name}"
+  filename = "${var.project_root}/ansible/sites/${local.app-name}/inventory-${local.app-name}"
 }

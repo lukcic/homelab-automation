@@ -7,7 +7,7 @@
         tubearchivist:
           container_name: tubearchivist
           restart: unless-stopped
-          image: bbilly1/tubearchivist
+          image: bbilly1/tubearchivist:v0.4.10
           ports:
             - 8000:8000
           volumes:
@@ -18,7 +18,7 @@
             - REDIS_HOST=archivist-redis
             - HOST_UID=1000
             - HOST_GID=1000
-            - TA_HOST=tubearchivist.lukcic.net
+            - TA_HOST=tubearchivist.lukcic.net https://tubearchivist.lukcic.pl
             - TA_USERNAME=lukcic
             - TA_PASSWORD=Verysecret1!
             - ELASTIC_PASSWORD=Verysecret1
