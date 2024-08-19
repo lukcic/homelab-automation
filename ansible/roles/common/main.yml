@@ -2,7 +2,6 @@
   hosts: localhost
   tasks:
     - include_vars: "{{ site_dir }}/vars.yml"
-
 - hosts: vm_root
   become: true
   gather_facts: yes
@@ -11,7 +10,6 @@
     - role: users
     - role: networking
     #- role: common/proxmox-agent
-
 - hosts: lxc_root
   become: true
   gather_facts: yes
