@@ -38,4 +38,4 @@ jobs:
           ANSIBLE_INVENTORY: "${{ github.workspace }}/ansible/sites/ns1.lukcic.net/inventory-ns1" 
           ANSIBLE_CONFIG: "${{ github.workspace }}/ansible/ansible.cfg"
           ANSIBLE_ROLES_PATH: "${{ github.workspace }}/ansible/roles"
-          ANSIBLE_SSH_COMMON_ARGS: "-vvv -o KexAlgorithms=ecdh-sha2-nistp521"
+          ANSIBLE_SSH_COMMON_ARGS: "-vvvv -o KexAlgorithms=ecdh-sha2-nistp521 -o ControlPersist=30m"
