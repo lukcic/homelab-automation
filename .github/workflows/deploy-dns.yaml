@@ -31,16 +31,22 @@ jobs:
         env:
           GIT_CRYPT_KEY: ${{ secrets.GIT_CRYPT_KEY }}
 
-      # - name: Setup SSH
-      #   uses: webfactory/ssh-agent@v0.9.0
-      #   with:
-      #     ssh-private-key: ${{ secrets.ANSIBLE_SSH_PRIVATE_KEY }}
+
+      - name: Run ansible playbook
+        run: |
+          ansible-playbook main.yml
+        working-directory: ./ansible/sites/ns1.lukcic.net
+        env:
+          ANSIBLE_INVENTORY: "${{ github.workspace }}/ansible/sites/ns1.lukcic.net/inventory-ns1" 
+          ANSIBLE_CONFIG: "${{ github.workspace }}/ansible/ansible.cfg"
+          ANSIBLE_ROLES_PATH: "${{ github.workspace }}/ansible/roles"
+          ANSIBLE_SSH_COMMON_ARGS: "-vvv -o KexAlgorithms=ecdh-sha2-nistp521"
+
 
       - name: Run playbook
         uses: dawidd6/action-ansible-playbook@v2
         env:
-          ANSIBLE_ROLES_PATH: "${{ github.workspace }}/ansible/roles"
-          ANSIBLE_SSH_COMMON_ARGS: "-vvv -o KexAlgorithms=ecdh-sha2-nistp521"
+          ANSIBLE_ROLES_PATH: 
         with:
           playbook: main.yml
           directory: ./ansible/sites/ns1.lukcic.net
