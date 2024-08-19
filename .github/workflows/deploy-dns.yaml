@@ -38,6 +38,9 @@ jobs:
 
       - name: Run playbook
         uses: dawidd6/action-ansible-playbook@v2
+        env:
+          ANSIBLE_ROLES_PATH: "${{ github.workspace }}/ansible/roles"
+          ANSIBLE_SSH_COMMON_ARGS: "-vvv -o KexAlgorithms=ecdh-sha2-nistp521"
         with:
           playbook: main.yml
           directory: ./ansible/sites/ns1.lukcic.net
@@ -46,8 +49,10 @@ jobs:
             roles_path=../../roles
             deprecation_warnings=False
             host_key_checking=False
-          key: ${{ secrets.ANSIBLE_SSH_PRIVATE_KEY }}
+            command_timeout=40
+          # key: ${{ secrets.ANSIBLE_SSH_PRIVATE_KEY }}
           inventory: |
-            lxc_ansible ansible_host=192.168.254.53 ansible_user=ansible
+            lxc_root ansible_host=192.168.254.53 ansible_user=root ansible_private_key_file=$HOME/.ssh/proxmox-lxc-root.pem
+            lxc_ansible ansible_host=192.168.254.53 ansible_user=ansible ansible_private_key_file=$HOME/.ssh/ansible-key-ecdsa.pem
           options: |
             -vvv
