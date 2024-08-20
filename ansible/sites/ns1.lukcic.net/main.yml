@@ -13,3 +13,4 @@
   gather_facts: yes
   roles:
     - named
+  tags: named
