@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - ansible/roles/named/vars/main.yml
+      - ansible/sites/ns1/vars.yml
 
 env:
   ANSIBLE_FORCE_COLOR: true
