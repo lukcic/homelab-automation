@@ -39,8 +39,8 @@ jobs:
 
       - name: Run ansible playbook
         run: ansible-playbook main.yml --tags "named"
-        working-directory: ./ansible/sites/ns1.lukcic.net
+        working-directory: ./ansible/sites/ns1
         env:
-          ANSIBLE_INVENTORY: "${{ github.workspace }}/ansible/sites/ns1.lukcic.net/inventory-ns1" 
+          ANSIBLE_INVENTORY: "${{ github.workspace }}/ansible/sites/ns1/inventory-ns1" 
           ANSIBLE_CONFIG: "${{ github.workspace }}/ansible/ansible.cfg"
           ANSIBLE_ROLES_PATH: "${{ github.workspace }}/ansible/roles"

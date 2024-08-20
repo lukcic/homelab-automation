@@ -1,2 +1,2 @@
-ansible/roles/named/vars/main.yml filter=git-crypt diff=git-crypt
-ansible/sites/ns1.lukcic.net/vars.yml filter=git-crypt diff=git-crypt
+ansible/sites/ns1/vars.yml filter=git-crypt diff=git-crypt
+ansible/sites/ns1/inventory-ns1 filter=git-crypt diff=git-crypt
