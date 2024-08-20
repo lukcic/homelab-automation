@@ -1,4 +1,4 @@
-files/zones/
+files/zones/db.*
 files/config/
 files/examples/
 vars/main.yml
