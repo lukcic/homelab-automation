@@ -1,14 +1,16 @@
 .DS_Store
-sites/*/vars.yml
-tsig.key
-ansible/roles/*/vars/main.yml
 
+*.log
 *.pem
 *.pub
+
 *.tfvars
 .terraform
 terraform.tfstate
 terraform.tfstate.backup
 
-*.log
+tsig.key
 git-crypt-key
+
+sites/*/vars.yml
+ansible/roles/*/vars/main.yml
