@@ -7,7 +7,6 @@ ansible/roles/semaphore/vars/main.yml
 
 *.pem
 *.pub
-inventory*
 *.tfvars
 .terraform
 terraform.tfstate
