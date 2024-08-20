@@ -1,9 +1,7 @@
 .DS_Store
 sites/*/vars.yml
-.log
 tsig.key
-ansible/roles/proxy/vars/main.yml
-ansible/roles/semaphore/vars/main.yml
+ansible/roles/*/vars/main.yml
 
 *.pem
 *.pub
