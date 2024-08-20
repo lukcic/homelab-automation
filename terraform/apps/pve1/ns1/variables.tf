@@ -19,3 +19,8 @@ variable "container_password" {
   type      = string
   sensitive = true
 }
+
+variable "domain" {
+  type      = string
+  sensitive = true
+}

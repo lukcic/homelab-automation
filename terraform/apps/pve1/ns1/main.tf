@@ -8,7 +8,7 @@ module "pve-ct" {
 
   container_id       = 25453
   target_node        = "pve1"
-  hostname           = "${local.app-name}.lukcic.net"
+  hostname           = "${local.app-name}.${var.domain}"
   container_password = var.container_password
 
   ostemplate           = "local:vztmpl/debian-12-standard_12.2-1_amd64.tar.zst"
@@ -29,17 +29,17 @@ module "pve-ct" {
     storage = "local-lvm"
   }
 
-  network = {
+  network = [{
     ip  = local.ip
     gw  = "192.168.254.254"
     dns = "1.1.1.1"
     tag = "254"
-  }
+  }]
 
   local_provisioner = {
-    working_dir = "${var.project_root}/ansible/sites/${local.app-name}.lukcic.net"
+    working_dir = "${var.project_root}/ansible/sites/${local.app-name}"
     environment = {
-      ANSIBLE_INVENTORY  = "${var.project_root}/ansible/sites/${local.app-name}.lukcic.net/inventory-${local.app-name}"
+      ANSIBLE_INVENTORY  = "${var.project_root}/ansible/sites/${local.app-name}/inventory-${local.app-name}"
       ANSIBLE_CONFIG     = "${var.project_root}/ansible/ansible.cfg"
       ANSIBLE_ROLES_PATH = "${var.project_root}/ansible/roles"
     }
@@ -56,6 +56,6 @@ lxc_root ansible_host=${local.ip} ansible_user=root ansible_private_key_file=~/.
 lxc_ansible ansible_host=${local.ip} ansible_user=ansible ansible_private_key_file=~/.ssh/ansible-key-ecdsa.pem
   EOF
 
-  filename = "${var.project_root}/ansible/sites/${local.app-name}.lukcic.net/inventory-${local.app-name}"
+  filename = "${var.project_root}/ansible/sites/${local.app-name}/inventory-${local.app-name}"
 }
 
