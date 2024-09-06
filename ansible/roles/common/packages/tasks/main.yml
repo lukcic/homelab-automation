@@ -4,7 +4,7 @@
     state: latest
     update_cache: true
   run_once: true
-  ignore_errors: true
+  #ignore_errors: true
 
 - name: Install required system packages
   apt:
@@ -21,7 +21,8 @@
       - python3-pip
       - virtualenv
       - python3-setuptools
+      - neofetch
     state: latest
     update_cache: true
   run_once: true
-  ignore_errors: true
+  #ignore_errors: true

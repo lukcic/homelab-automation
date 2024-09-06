@@ -1,0 +1,37 @@
+---
+- hosts: localhost
+  gather_facts: no
+
+  tasks:
+    - name: Get site path
+      shell: pwd
+      register: site_directory
+
+- hosts: all
+  become: true
+  gather_facts: yes
+  roles:
+    - common/networking
+    - common/packages
+
+- name: Set up /etc/resolv.conf.
+  hosts: all
+  become: true
+  gather_facts: yes
+  roles:
+    - role: common/resolv-conf
+      resolv_conf_search:
+        - lukcic.net
+      resolv_conf_nameservers:
+        - "192.168.254.53"
+        - "1.1.1.1"
+
+- hosts: all
+  tasks:
+    - name: Enable neofetch
+      lineinfile:
+        path: ~/.bashrc
+        line: "neofetch"
+        state: present
+        insertafter: EOF
+        create: true
