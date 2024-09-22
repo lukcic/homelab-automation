@@ -18,11 +18,15 @@
       - ca-certificates
       - curl
       - software-properties-common
-      - python3-pip
       - virtualenv
+      - python3-pip
       - python3-setuptools
+      - python3-apt
       - neofetch
     state: latest
     update_cache: true
-  run_once: true
+  #run_once: true
   #ignore_errors: true
+# TODO:
+# - set of common packages for all hosts
+# - possibility for adding own package names from site

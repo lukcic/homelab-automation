@@ -1,7 +1,0 @@
-[controller]
-k8s-controller ansible_host=192.168.254.170 ansible_user=debian ansible_private_key_file=~/.ssh/lukcic_id_ed25519.pem ansible_python_interpreter=/usr/bin/python3
-
-[cluster]
-k8s-1 ansible_host=192.168.254.171 ansible_user=debian ansible_private_key_file=~/.ssh/lukcic_id_ed25519.pem ansible_python_interpreter=/usr/bin/python3
-k8s-2 ansible_host=192.168.254.172 ansible_user=debian ansible_private_key_file=~/.ssh/lukcic_id_ed25519.pem ansible_python_interpreter=/usr/bin/python3
-k8s-3 ansible_host=192.168.254.173 ansible_user=debian ansible_private_key_file=~/.ssh/lukcic_id_ed25519.pem ansible_python_interpreter=/usr/bin/python3

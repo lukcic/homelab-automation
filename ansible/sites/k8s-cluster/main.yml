@@ -1,11 +1,11 @@
 ---
 - hosts: localhost
   gather_facts: no
-
   tasks:
     - name: Get site path
       shell: pwd
       register: site_directory
+      tags: kubespray
 
 - hosts: all
   become: true
@@ -35,3 +35,31 @@
         state: present
         insertafter: EOF
         create: true
+
+- hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: Install specified python requirements
+      ansible.builtin.pip:
+        chdir: ./kubespray
+        requirements: requirements.txt
+      ignore_errors: true
+
+    - name: Copy inventory dir
+      copy:
+        src: ./lukcic
+        dest: kubespray/inventory/lukcic
+
+    - name: Copy inventory dir
+      shell:
+        src: ./lukcic
+        dest: kubespray/inventory/lukcic
+
+    - name: Run installation
+      become: true
+      import_playbook: kubespray/cluster.yml
+  tags: kubespray
+# ansible-playbook -i kubespray/inventory/lukcic/hosts.yaml --become kubespray/cluster.yml
+# --become-user=debian
+
+# ln -s /etc/kubernetes/admin.conf ~/.kube/config
