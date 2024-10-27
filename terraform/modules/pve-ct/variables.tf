@@ -6,6 +6,7 @@ variable "hardware" {
   type = object({
     cores  = optional(number, 2)
     memory = optional(number, 1024)
+    swap   = optional(number, 1024)
   })
   default = {}
 }

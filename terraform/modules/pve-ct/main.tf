@@ -2,6 +2,7 @@ resource "proxmox_lxc" "container" {
   hostname     = var.hostname
   cores        = var.hardware.cores
   memory       = var.hardware.memory
+  swap         = var.hardware.swap
   target_node  = var.target_node
   ostemplate   = var.ostemplate
   password     = var.container_password
