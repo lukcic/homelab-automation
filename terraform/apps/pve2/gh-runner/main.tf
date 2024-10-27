@@ -23,10 +23,11 @@ module "pve-ct" {
 
   network = [
     {
-      ip  = local.ip
-      dns = "192.168.254.20"
-      gw  = "192.168.254.254"
-      tag = "254"
+      ip     = local.ip
+      dns    = "192.168.254.20"
+      gw     = "192.168.254.254"
+      tag    = "254"
+      bridge = "vmbr0"
     }
   ]
 
