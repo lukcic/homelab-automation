@@ -14,3 +14,4 @@ git-crypt-key
 
 sites/*/vars.yml
 ansible/roles/*/vars/main.yml
+secrets.yml

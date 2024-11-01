@@ -1,16 +1,7 @@
-- name: Install aptitude
-  apt:
-    name: aptitude
-    state: latest
-    update_cache: true
-  run_once: true
-  #ignore_errors: true
-
 - name: Install required system packages
-  apt:
+  ansible.builtin.apt:
     pkg:
       - git
-      - gh
       - jq
       - tldr
       - sudo
@@ -23,10 +14,8 @@
       - python3-setuptools
       - python3-apt
       - neofetch
-    state: latest
+    state: present
     update_cache: true
-  #run_once: true
-  #ignore_errors: true
 # TODO:
 # - set of common packages for all hosts
 # - possibility for adding own package names from site

@@ -1,16 +1,19 @@
-all_groups:
+all_groups: # noqa: var-naming[no-role-prefix]
   - name: wheel
   - name: docker
 
-all_users:
+all_users: # noqa: var-naming[no-role-prefix]
   - name: ansible
     groups: wheel
     shell: /bin/bash
+    uid: 3001
 
   - name: docker
     groups: docker
     shell: /usr/sbin/nologin
+    uid: 3002
 
   - name: lukcic
     groups: wheel
     shell: /usr/bin/zsh
+    uid: 3000

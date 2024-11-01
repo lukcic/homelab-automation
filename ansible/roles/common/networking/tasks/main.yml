@@ -1,4 +1,0 @@
-- include_tasks: disable-ipv6.yml
-
-- name: Check distribution
-  debug: var=ansible_os_family

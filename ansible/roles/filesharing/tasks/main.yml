@@ -1,0 +1,36 @@
+- name: Install Cockpit with addons
+  tags: cockpit
+  become: true
+  block:
+    - name: Add backports repository
+      ansible.builtin.apt_repository:
+        repo: deb http://deb.debian.org/debian bookworm-backports main contrib
+        state: present
+
+    - name: Upgrade the OS
+      ansible.builtin.apt:
+        upgrade: full
+        update_cache: true
+
+    - name: Install required system packages
+      ansible.builtin.apt:
+        name: cockpit
+        state: present
+        install_recommends: false
+        update_cache: true
+        default_release: bookworm-backports
+    # /etc/cockpit/disallowed-users root
+
+    - name: Download Cockpit addon packages
+      ansible.builtin.get_url:
+        url: '{{ item.url }}'
+        dest: '/tmp/{{ item.name }}_{{ item.version }}.deb'
+        mode: 644
+      with_items: '{{ extensions }}'
+
+    - name: Install Cockpit addon packages
+      ansible.builtin.command:
+        cmd: 'apt --fix-broken install /tmp/{{ item.name }}_{{ item.version }}.deb -y'
+      register: package_installed
+      changed_when: package_installed.rc != 0
+      with_items: '{{ extensions }}'

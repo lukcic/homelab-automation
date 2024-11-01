@@ -1,0 +1,6 @@
+- name: Disable IPv6
+  ansible.builtin.include_tasks: disable-ipv6.yml
+
+- name: Check distribution
+  ansible.builtin.debug:
+    var: ansible_os_family

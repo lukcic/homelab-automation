@@ -1,66 +1,12 @@
 - name: Install required system packages
-  apt:
+  ansible.builtin.apt:
     pkg:
       - zsh
       - vim
       - tmux
       - bat
-    state: latest
+    state: present
     update_cache: true
-  run_once: true
-  ignore_errors: true
-
-- name: Create autoinstall directory
-  become_user: lukcic
-  file:
-    path: /home/lukcic/autoinstall
-    state: directory
-    mode: "0700"
-
-- name: Check if Ohmyzsh is installed
-  stat:
-    path: /home/lukcic/.oh-my-zsh
-  register: result
-
-- name: Install Ohmyzsh
-  become_user: lukcic
-  shell: sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
-  args:
-    chdir: /home/lukcic/autoinstall
-  when: not result.stat.exists
-
-- name: Install zsh-autosuggestions
-  become_user: lukcic
-  git:
-    repo: https://github.com/zsh-users/zsh-autosuggestions
-    dest: /home/lukcic/.oh-my-zsh/custom/plugins/zsh-autosuggestions
-    clone: yes
-    update: yes
-
-- name: Install zsh-syntax-highlighting
-  become_user: lukcic
-  git:
-    repo: https://github.com/zsh-users/zsh-syntax-highlighting.git
-    dest: /home/lukcic/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
-    clone: yes
-    update: yes
-
-- name: Install powerlevel10k
-  become_user: lukcic
-  git:
-    repo: https://github.com/romkatv/powerlevel10k.git
-    dest: /home/lukcic/.oh-my-zsh/custom/themes/powerlevel10k
-    depth: 1
-    clone: yes
-    update: yes
-
-- name: Install tpm-tmux plugin
-  become_user: lukcic
-  git:
-    repo: https://github.com/tmux-plugins/tpm
-    dest: /home/lukcic/.tmux/plugins/tpm
-    clone: yes
-    update: yes
 
 - name: Create batcat symbolic link
   become: true
@@ -71,21 +17,78 @@
     group: root
     state: link
 
-- name: Override config files
-  copy:
-    src: "{{ role_path }}/files/{{ item }}"
-    dest: "/home/lukcic/{{ item }}"
-    owner: lukcic
-    group: lukcic
-  with_items:
-    - .zshrc
-    - .p10k.zsh
-    - tmux.conf
+- name: Configure packages for user
+  become: true
+  become_user: lukcic
+  block:
+    - name: Create autoinstall directory
+      ansible.builtin.file:
+        path: /home/lukcic/autoinstall
+        state: directory
+        mode: '0700'
+
+    - name: Check if Ohmyzsh is installed
+      ansible.builtin.stat:
+        path: /home/lukcic/.oh-my-zsh
+      register: result
+
+    - name: Install Ohmyzsh
+      ansible.builtin.shell: sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+      args:
+        chdir: /home/lukcic/autoinstall
+      when: not result.stat.exists
+      register: zsh_install
+      changed_when: zsh_install.rc != 0
+
+    - name: Install zsh-autosuggestions
+      ansible.builtin.git: # noqa: latest
+        repo: https://github.com/zsh-users/zsh-autosuggestions
+        dest: /home/lukcic/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+        clone: true
+        update: true
+
+    - name: Install zsh-syntax-highlighting
+      ansible.builtin.git: # noqa: latest
+        repo: https://github.com/zsh-users/zsh-syntax-highlighting.git
+        dest: /home/lukcic/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+        clone: true
+        update: true
+
+    - name: Install powerlevel10k
+      become: true
+      become_user: lukcic
+      ansible.builtin.git: # noqa: latest
+        repo: https://github.com/romkatv/powerlevel10k.git
+        dest: /home/lukcic/.oh-my-zsh/custom/themes/powerlevel10k
+        depth: 1
+        clone: true
+        update: true
+
+    - name: Install tpm-tmux plugin
+      become: true
+      become_user: lukcic
+      ansible.builtin.git: # noqa: latest
+        repo: https://github.com/tmux-plugins/tpm
+        dest: /home/lukcic/.tmux/plugins/tpm
+        clone: true
+        update: true
+
+    - name: Override config files
+      ansible.builtin.copy:
+        src: '{{ role_path }}/files/{{ item }}'
+        dest: '/home/lukcic/{{ item }}'
+        owner: lukcic
+        group: lukcic
+        mode: '0700'
+      with_items:
+        - .zshrc
+        - .p10k.zsh
+        - tmux.conf
 
 - name: Change shell
-  user:
+  ansible.builtin.user:
     name: lukcic
     shell: /usr/bin/zsh
 
 - name: Add aliasses
-  include_tasks: "{{ role_path }}/tasks/aliases.yml"
+  ansible.builtin.include_tasks: '{{ role_path }}/tasks/aliases.yml'
