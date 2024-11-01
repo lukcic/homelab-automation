@@ -1,0 +1,14 @@
+# extensions: # noqa: var-naming[no-role-prefix]
+#   - https://github.com/45Drives/cockpit-file-sharing/releases/download/v3.3.7/cockpit-file-sharing_3.3.7-1focal_all.deb
+#   - https://github.com/45Drives/cockpit-navigator/releases/download/v0.5.10/cockpit-navigator_0.5.10-1focal_all.deb
+#   - https://github.com/45Drives/cockpit-identities/releases/download/v0.1.12/cockpit-identities_0.1.12-1focal_all.deb
+extensions: # noqa: var-naming[no-role-prefix]
+  - name: cockpit-file-sharing
+    version: v3.3.7
+    url: https://github.com/45Drives/cockpit-file-sharing/releases/download/v3.3.7/cockpit-file-sharing_3.3.7-1focal_all.deb
+  - name: cockpit-navigator
+    version: v0.5.10
+    url: https://github.com/45Drives/cockpit-navigator/releases/download/v0.5.10/cockpit-navigator_0.5.10-1focal_all.deb
+  - name: cockpit-identities
+    version: v0.1.12
+    url: https://github.com/45Drives/cockpit-identities/releases/download/v0.1.12/cockpit-identities_0.1.12-1focal_all.deb

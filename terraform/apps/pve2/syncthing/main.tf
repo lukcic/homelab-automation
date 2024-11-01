@@ -1,13 +1,13 @@
 locals {
-  app-name = "fileserver"
-  ip       = "192.168.254.99"
-  ip2      = "192.168.33.99"
+  app-name = "syncthing"
+  ip       = "192.168.254.101"
+  ip2      = "192.168.33.101"
 }
 
 module "pve-ct" {
   source = "../../../modules/pve-ct"
 
-  container_id       = 25499
+  container_id       = 254101
   hostname           = local.app-name
   container_password = var.container_password
 

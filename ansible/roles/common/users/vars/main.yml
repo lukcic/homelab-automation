@@ -1,6 +1,6 @@
 all_groups: # noqa: var-naming[no-role-prefix]
   - name: wheel
-  - name: docker
+  # - name: docker
 
 all_users: # noqa: var-naming[no-role-prefix]
   - name: ansible
@@ -8,10 +8,10 @@ all_users: # noqa: var-naming[no-role-prefix]
     shell: /bin/bash
     uid: 3001
 
-  - name: docker
-    groups: docker
-    shell: /usr/sbin/nologin
-    uid: 3002
+  # - name: docker
+  #   groups: docker
+  #   shell: /usr/sbin/nologin
+  #   uid: 3002
 
   - name: lukcic
     groups: wheel

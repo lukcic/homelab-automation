@@ -1,0 +1,22 @@
+- name: Install Syncthing with addons
+  tags: syncthing
+  become: true
+  block:
+    - name: Add Syncthing signing key
+      ansible.builtin.get_url:
+        url: https://syncthing.net/release-key.gpg
+        dest: /etc/apt/keyrings/syncthing-archive-keyring.gpg
+        mode: '0644'
+
+    - name: Add Syncthing repo
+      ansible.builtin.apt_repository:
+        repo: 'deb [signed-by=/etc/apt/keyrings/syncthing-archive-keyring.gpg] https://apt.syncthing.net/ syncthing {{ item }}'
+        state: present
+      with_items:
+        - 'stable'
+        - 'candidate'
+
+    - name: Install Syncthing
+      ansible.builtin.apt:
+        name: syncthing
+        update_cache: true
