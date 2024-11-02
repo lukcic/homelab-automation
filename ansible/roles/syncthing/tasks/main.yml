@@ -1,0 +1,43 @@
+- name: Install Syncthing with addons
+  tags: syncthing
+  become: true
+  block:
+    - name: Add Syncthing signing key
+      ansible.builtin.get_url:
+        url: https://syncthing.net/release-key.gpg
+        dest: /etc/apt/keyrings/syncthing-archive-keyring.gpg
+        mode: '0644'
+
+    - name: Add Syncthing repo
+      ansible.builtin.apt_repository:
+        repo: 'deb [signed-by=/etc/apt/keyrings/syncthing-archive-keyring.gpg] https://apt.syncthing.net/ syncthing {{ item }}'
+        state: present
+      with_items:
+        - 'stable'
+        - 'candidate'
+
+    - name: Install Syncthing
+      ansible.builtin.apt:
+        name: syncthing
+        update_cache: true
+
+    - name: Enable service # noqa: command-instead-of-module
+      ansible.builtin.command: systemctl enable syncthing@lukcic.service
+      register: enabled
+      changed_when: enabled.rc != 0
+
+    - name: Start service # noqa: command-instead-of-module
+      ansible.builtin.command: systemctl start syncthing@lukcic.service
+      register: started
+      changed_when: started.rc != 0
+
+    - name: Replace localhost bind address
+      ansible.builtin.lineinfile:
+        path: /home/lukcic/.local/state/syncthing/config.xml
+        regexp: '^<address>127.0.0.1:8384</address>'
+        line: '<address>0.0.0.0:8384</address>'
+
+    - name: Restart service # noqa: command-instead-of-module
+      ansible.builtin.command: systemctl restart syncthing@lukcic.service
+      register: restarted
+      changed_when: restarted.rc != 0
