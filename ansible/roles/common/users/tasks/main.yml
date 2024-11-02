@@ -2,7 +2,7 @@
   ansible.builtin.group:
     name: '{{ item.name }}'
     state: present
-  with_items: '{{ all_groups }}'
+  with_items: '{{ all_groups }}' # FIXME - duplicate
 
 - name: Create user groups
   ansible.builtin.group:

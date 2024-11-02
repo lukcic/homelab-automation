@@ -1,0 +1,31 @@
+- name: Run Docker container with Semaphore
+  community.docker.docker_container:
+    name: semaphore
+    image: semaphoreui/semaphore:v2.10.35
+    state: healthy
+    detach: true
+    restart_policy: unless-stopped
+    ports:
+      - 3000:3000
+    volumes:
+      - semaphore-config:/etc/semaphore
+      - semaphore-db:/var/lib/semaphore # database.boltdb location
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'wget',
+          '--quiet',
+          '--tries=1',
+          '--spider',
+          'http://localhost:3000',
+        ]
+    env: SEMAPHORE_DB_DIALECT=bolt
+      SEMAPHORE_ADMIN_PASSWORD='{{ admin_password }}'
+      SEMAPHORE_ADMIN_NAME=lukcic
+      SEMAPHORE_ADMIN_EMAIL=admin@lukcic.net
+      SEMAPHORE_ADMIN=lukcic
+    recreate: '{{ recreate_containers | bool | ternary(true, false) }}'
+    timeout: 120
+  tags:
+    - semaphore
