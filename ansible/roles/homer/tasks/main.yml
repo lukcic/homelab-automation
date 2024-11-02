@@ -1,23 +1,23 @@
 - name: Create Homer config directory
-  file:
+  ansible.builtin.file:
     path: /etc/homer/assets
     state: directory
-    mode: 0755
+    mode: '0755'
     group: ansible
     owner: ansible
   tags:
     - homer
 
 - name: Copy Homer configuration
-  copy:
-    src: "{{ role_path }}/files/{{ item }}"
-    dest: "/etc/homer/assets/{{ item }}"
+  ansible.builtin.copy:
+    src: '{{ role_path }}/files/{{ item }}'
+    dest: '/etc/homer/assets/{{ item }}'
     owner: ansible
     group: ansible
-    mode: 0755
+    mode: '0755'
   with_items:
-    - "config.yml"
-    - "custom.css"
+    - 'config.yml'
+    - 'custom.css'
   tags:
     - homer
   register: homer_config_change
@@ -26,7 +26,7 @@
   community.docker.docker_compose:
     project_name: homer
     definition:
-      version: "3.5"
+      version: '3.5'
       services:
         homer:
           image: b4bz/homer:v23.10.1

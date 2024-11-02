@@ -15,9 +15,8 @@
   become: true
   gather_facts: yes
   roles:
-    - common/networking
+    - common/network
     - docker
     - common/shell
     - homer
     - portainer
-    - semaphore
