@@ -99,6 +99,11 @@ services:
         subtitle: "Nginx Proxy Manager"
         url: "http://proxy.lukcic.pl:81"
         target: "_blank"
+      - name: "Upsnap"
+        icon: "fa-solid fa-power-off"
+        subtitle: "Upsnap WoL"
+        url: "http://upsnap.lukcic.pl"
+        target: "_blank"
 
   - name: "Network"
     icon: "fas fa-network-wired"
