@@ -90,7 +90,7 @@ services:
         url: "https://pve2.lukcic.pl"
         target: "_blank"
       - name: "Proxmox PBS"
-        icon: "fa-solid fa-hard-drive"
+        icon: "fa-regular fa-hard-drive"
         subtitle: "Proxmox Backup Server"
         url: "https://pbs.lukcic.pl"
         target: "_blank"
