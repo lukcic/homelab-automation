@@ -112,7 +112,7 @@ services:
       - name: "Syncthing Cockpit"
         icon: "fa-brands fa-debian"
         subtitle: "Syncthing Cockpit"
-        url: "http://syncthing-cockpit.lukcic.pl"
+        url: "https://syncthing-cockpit.lukcic.pl"
         target: "_blank"
 
   - name: "Network"
