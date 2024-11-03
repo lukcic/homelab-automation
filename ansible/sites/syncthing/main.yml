@@ -14,3 +14,4 @@
   vars_files: secrets.yml
   roles:
     - syncthing
+    - filesharing

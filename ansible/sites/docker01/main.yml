@@ -15,7 +15,7 @@
   become: true
   gather_facts: yes
   roles:
-    - common/network
+    - common/network # noqa: syntax-check[specific]
     - docker
     - common/shell
     - homer
