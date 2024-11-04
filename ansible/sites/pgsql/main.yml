@@ -14,4 +14,4 @@
   hosts: lxc_ansible
   vars_files: secrets.yml
   roles:
-    - role: geerlingguy.postgresql
+    - postgresql
