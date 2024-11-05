@@ -1,0 +1,34 @@
+- name: Configure user and database
+  tags: postgresql
+  become: true
+  become_user: postgres
+  block:
+    - name: Create database
+      community.postgresql.postgresql_db:
+        state: present
+        name: '{{ db_name }}'
+
+    - name: Create db user
+      community.postgresql.postgresql_user:
+        state: present
+        name: '{{ db_user }}'
+        password: '{{ db_password }}'
+
+    - name: Grant db user access to db
+      community.postgresql.postgresql_privs:
+        type: database
+        database: '{{ db_name }}'
+        roles: '{{ db_user }}'
+        grant_option: no
+        privs: all
+
+    - name: Allow md5 connection for the db user
+      community.postgresql.postgresql_pg_hba:
+        dest: '/etc/postgresql/16/main/pg_hba.conf'
+        contype: host
+        address: samenet
+        databases: all
+        method: md5
+        users: '{{ db_user }}'
+        create: true
+      notify: Restart PostgreSQL

@@ -1,0 +1,11 @@
+- name: Install PostgreSQL packages
+  ansible.builtin.include_tasks: install.yml
+  tags: postgresql
+
+- name: Configure database
+  ansible.builtin.include_tasks: config.yml
+  tags: postgresql
+
+- name: Install PGAdmin
+  ansible.builtin.include_tasks: pgadmin.yml
+  tags: postgresql

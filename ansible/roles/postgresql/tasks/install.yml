@@ -1,0 +1,50 @@
+- name: Install PostgreSQL
+  tags: postgresql
+  become: true
+  block:
+    - name: Install postgresql-common package
+      ansible.builtin.apt:
+        name: postgresql-common
+        state: present
+        update_cache: true
+
+    - name: Add PostgreSQL signing key
+      ansible.builtin.get_url:
+        url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
+        dest: /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc
+        mode: '0644'
+
+    - name: Add PostgreSQL repo
+      ansible.builtin.apt_repository:
+        repo: 'deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] https://apt.postgresql.org/pub/repos/apt bookworm-pgdg main'
+        state: present
+
+    - name: Install PostgreSQL packages
+      ansible.builtin.apt:
+        name: '{{ item }}'
+        state: present
+        update_cache: true
+      with_items:
+        - postgresql-16
+        - postgresql-contrib
+        - postgresql-common
+
+    - name: Install Python packages
+      ansible.builtin.pip:
+        name: psycopg2-binary
+        state: present
+        break_system_packages: true
+
+    - name: Enable listening on all IPs
+      ansible.builtin.lineinfile:
+        path: /etc/postgresql/16/main/postgresql.conf
+        insertafter: '^# - Connection Settings'
+        line: listen_addresses = '0.0.0.0'
+
+    - name: Start and enable PostgreSQL service
+      ansible.builtin.service:
+        name: postgresql
+        state: started
+        enabled: true
+      with_items:
+        - postgresql

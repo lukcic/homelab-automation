@@ -1,0 +1,30 @@
+- name: Install PGAdmin
+  tags: postgresql-pgadmin
+  become: true
+  block:
+    - name: Add PGAdmin signing key
+      ansible.builtin.get_url:
+        url: https://www.pgadmin.org/static/packages_pgadmin_org.pub
+        dest: /usr/share/keyrings/packages-pgadmin-org.asc
+        mode: '0644'
+
+    - name: Add PGAdmin repo
+      ansible.builtin.apt_repository:
+        repo: 'deb [signed-by=/usr/share/keyrings/packages-pgadmin-org.asc] https://ftp.postgresql.org/pub/pgadmin/pgadmin4/apt/bookworm pgadmin4 main'
+        state: present
+        filename: /etc/apt/sources.list.d/pgadmin4.list
+
+    - name: Install PGAdmin package
+      ansible.builtin.apt:
+        name: 'pgadmin4'
+        state: present
+        update_cache: true
+
+    - name: Setup PGAdmin
+      environment:
+        PGADMIN_SETUP_EMAIL: '{{ pgadmin_setup_email }}'
+        PGADMIN_SETUP_PASSWORD: '{{ pgadmin_setup_password }}'
+      ansible.builtin.command:
+        cmd: '/usr/pgadmin4/bin/setup-web.sh --yes'
+      register: pgadmin_configured
+      changed_when: pgadmin_configured.rc != 0

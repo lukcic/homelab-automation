@@ -1,0 +1,15 @@
+- name: Run migrations
+  tags: postgresql
+  become: true
+  block:
+    - name: 'Load SQL script into a variable'
+      ansible.builtin.set_fact:
+        migration_sql: "{{ lookup('file', 'conf/migration.sql') }}"
+
+    - name: 'Execute script from variable'
+      become: true
+      become_user: postgres
+      ansible.builtin.command:
+        cmd: 'psql {{ db_name }} -c {{ migration_sql }}'
+      register: sql_response_variable
+      changed_when: sql_response_variable.rc != 0
