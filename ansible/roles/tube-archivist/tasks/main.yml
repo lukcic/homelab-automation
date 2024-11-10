@@ -18,10 +18,10 @@
             - REDIS_HOST=archivist-redis
             - HOST_UID=1000
             - HOST_GID=1000
-            - TA_HOST=tubearchivist.lukcic.net https://tubearchivist.lukcic.pl
-            - TA_USERNAME=lukcic
-            - TA_PASSWORD=Verysecret1!
-            - ELASTIC_PASSWORD=Verysecret1
+            - 'TA_HOST={{ ta_origins }}'
+            - 'TA_USERNAME={{ ta_username }}'
+            - 'TA_PASSWORD={{ ta_password }}'
+            - 'ELASTIC_PASSWORD={{ es_password }}'
             - TZ=Europe/Warsaw
           healthcheck:
             test: ['CMD', 'curl', '-f', 'http://localhost:8000/health']
@@ -47,7 +47,7 @@
           container_name: archivist-es
           restart: unless-stopped
           environment:
-            - 'ELASTIC_PASSWORD=Verysecret1'
+            - 'ELASTIC_PASSWORD={{ es_password }}'
             - 'ES_JAVA_OPTS=-Xms512m -Xmx512m'
             - 'xpack.security.enabled=true'
             - 'discovery.type=single-node'
@@ -65,25 +65,25 @@
           driver: 'local'
           driver_opts:
             type: nfs
-            o: 'addr=192.168.254.200,rw,nfsvers=4'
+            o: 'addr={{ nas_ip }},rw,nfsvers=4'
             device: ':/mnt/docker-volumes/tubearchivist/es'
         nfs-tubearchivist-redis:
           driver: 'local'
           driver_opts:
             type: nfs
-            o: 'addr=192.168.254.200,rw,nfsvers=4'
+            o: 'addr={{ nas_ip }},rw,nfsvers=4'
             device: ':/mnt/docker-volumes/tubearchivist/redis'
         nfs-tubearchivist-cache:
           driver: 'local'
           driver_opts:
             type: nfs
-            o: 'addr=192.168.254.200,rw,nfsvers=4'
+            o: 'addr={{ nas_ip }},rw,nfsvers=4'
             device: ':/mnt/docker-volumes/tubearchivist/cache'
         nfs-tubearchivist-media:
           driver: 'local'
           driver_opts:
             type: nfs
-            o: 'addr=192.168.254.200,rw,nfsvers=4'
+            o: 'addr={{ nas_ip }},rw,nfsvers=4'
             device: ':/mnt/docker-volumes/tubearchivist/media'
   register: output
   become: true

@@ -11,7 +11,7 @@
   become: true
   gather_facts: yes
   roles:
-    - common/networking
+    - common/networking # noqa: syntax-check[specific]
     - common/packages
 
 - name: Set up /etc/resolv.conf.
@@ -23,15 +23,15 @@
       resolv_conf_search:
         - lukcic.net
       resolv_conf_nameservers:
-        - "192.168.254.53"
-        - "1.1.1.1"
+        - '192.168.254.53'
+        - '1.1.1.1'
 
 - hosts: all
   tasks:
     - name: Enable neofetch
       lineinfile:
         path: ~/.bashrc
-        line: "neofetch"
+        line: 'neofetch'
         state: present
         insertafter: EOF
         create: true
