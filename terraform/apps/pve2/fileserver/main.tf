@@ -1,13 +1,13 @@
 locals {
   app-name = "fileserver"
-  ip       = "192.168.254.99"
-  ip2      = "192.168.33.99"
+  ip       = "192.168.254.200"
+  ip2      = "192.168.33.200"
 }
 
 module "pve-ct" {
   source = "../../../modules/pve-ct"
 
-  container_id       = 25499
+  container_id       = 33200
   hostname           = local.app-name
   container_password = var.container_password
 
@@ -16,7 +16,10 @@ module "pve-ct" {
   ssh_conn_private_key = "~/.ssh/proxmox-lxc-root.pem"
 
   settings = {
-    protection = false
+    unprivileged = false
+    protection   = false
+    nesting      = true
+    mount        = "nfs;cifs"
   }
 
   network = [{
