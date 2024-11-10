@@ -1,20 +1,36 @@
----
-- hosts: localhost
-  gather_facts: no
+# - name: Configure hosts
+#   become: true
+#   hosts: vm_root
+#   vars_files: secrets.yml
+#   roles:
+#     - common/packages # noqa: syntax-check[specific]
+#     - common/users
+#     - common/shell
 
-  tasks:
-    - name: Get site path
-      shell: pwd
-      register: site_directory
-
-- import_playbook: ../../roles/common/main.yml
-  vars:
-    site_dir: "{{ hostvars['localhost']['site_directory'].stdout }}"
-
-- hosts: vm_ansible
+- name: Initialize PVE cluster
   become: true
-  gather_facts: yes
+  become_user: root
+  hosts: vm_ansible
+  vars_files: secrets.yml
   roles:
-    - docker
     - tube-archivist
-    - common/shell
+# ---
+# - hosts: localhost
+#   gather_facts: no
+
+#   tasks:
+#     - name: Get site path
+#       shell: pwd
+#       register: site_directory
+
+# - import_playbook: ../../roles/common/main.yml
+#   vars:
+#     site_dir: "{{ hostvars['localhost']['site_directory'].stdout }}"
+
+# - hosts: vm_ansible
+#   become: true
+#   gather_facts: yes
+#   roles:
+#     - docker # noqa: syntax-check[specific]
+#     -
+#     - common/shell
