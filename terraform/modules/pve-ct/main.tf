@@ -40,6 +40,28 @@ resource "proxmox_lxc" "container" {
     }
   }
 
+  dynamic "mountpoint" {
+    for_each = var.mountpoint
+
+    content {
+      key     = index(var.mountpoint, mountpoint.value)
+      slot    = index(var.mountpoint, mountpoint.value)
+      storage = mountpoint.value.storage
+      volume  = mountpoint.value.volume
+      mp      = mountpoint.value.mp
+      size    = mountpoint.value.size
+    }
+    # storage = "/srv/host/bind-mount-point"
+    # volume = "/srv/host/bind-mount-point"
+    # mp     = "/mnt/container/bind-mount-point"
+    // Without 'volume' defined, Proxmox will try to create a volume with
+    // the value of 'storage' + : + 'size' (without the trailing G) - e.g.
+    // "/srv/host/bind-mount-point:256".
+    // This behaviour looks to be caused by a bug in the provider.
+
+    # size   = "256G"
+  }
+
   features {
     nesting = var.settings.nesting
     mount   = var.settings.mount

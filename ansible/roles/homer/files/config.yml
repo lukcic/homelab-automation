@@ -165,7 +165,7 @@ services:
       - name: 'Anetflix'
         icon: 'fa-solid fa-film'
         subtitle: 'Jellyfin'
-        url: 'https://anetflix.lukcic.pl'
+        url: 'https://jellyfin.lukcic.pl'
         target: '_blank'
       - name: 'PhotoPrism'
         icon: 'fa-regular fa-image'

@@ -1,0 +1,16 @@
+- name: Configure hosts
+  become: true
+  hosts: lxc_root
+  vars_files: secrets.yml
+  roles:
+    - common/packages # noqa: syntax-check[specific]
+    - common/users
+    - common/shell
+
+- name: Initialize PVE cluster
+  become: true
+  become_user: root
+  hosts: lxc_ansible
+  vars_files: secrets.yml
+  roles:
+    - jellyfin

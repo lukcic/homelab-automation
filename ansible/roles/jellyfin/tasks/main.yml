@@ -1,0 +1,20 @@
+- name: Install Jellyfin with addons
+  tags: jellyfin
+  become: true
+  block:
+    - name: Install Extrepo
+      ansible.builtin.package:
+        name: extrepo
+        state: present
+
+    - name: Enable Exrepo for Jellyfin
+      ansible.builtin.command:
+        cmd: 'extrepo enable jellyfin'
+      register: extrepo_enabled
+      changed_when: extrepo_enabled.rc != 0
+
+    - name: Inatall Jellyfin
+      ansible.builtin.apt:
+        name: jellyfin
+        state: present
+        update_cache: true

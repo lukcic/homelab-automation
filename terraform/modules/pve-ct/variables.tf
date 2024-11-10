@@ -39,6 +39,16 @@ variable "network" {
   }))
 }
 
+variable "mountpoint" {
+  type = list(object({
+    storage = string
+    volume  = string
+    mp      = string
+    size    = string
+  }))
+  default = []
+}
+
 variable "settings" {
   type = object({
     onboot       = optional(bool, true)
