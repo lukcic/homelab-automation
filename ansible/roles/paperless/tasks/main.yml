@@ -1,0 +1,35 @@
+- name: Run Docker container with Paperless-ngx
+  community.docker.docker_container:
+    name: paperless
+    image: ghcr.io/paperless-ngx/paperless-ngx:2.13.4
+    state: started
+    detach: true
+    restart_policy: unless-stopped
+    ports:
+      - '7000:8000'
+    volumes:
+      - data:/usr/src/paperless/data
+      - media:/usr/src/paperless/media
+      - export:/usr/src/paperless/export
+      - consume:/usr/src/paperless/consume
+    # healthcheck:
+    #   test:
+    #     [
+    #       'CMD',
+    #       'wget',
+    #       '--quiet',
+    #       '--tries=1',
+    #       '--spider',
+    #       'http://localhost:3000',
+    #     ]
+    env:
+      PAPERLESS_REDIS: 'redis://192.168.254.71:6379'
+      PAPERLESS_DBHOST: '192.168.254.70'
+      PAPERLESS_DBPASS: '{{ db_password }}'
+      PAPERLESS_URL: https://paperless.lukcic.pl
+      PAPERLESS_CSRF_TRUSTED_ORIGINS: https://paperless.lukcic.pl
+      PAPERLESS_ALLOWED_HOSTS: https://paperless.lukcic.pl
+    recreate: true
+    timeout: 120
+  tags:
+    - paperless

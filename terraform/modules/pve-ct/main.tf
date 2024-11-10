@@ -42,6 +42,7 @@ resource "proxmox_lxc" "container" {
 
   features {
     nesting = var.settings.nesting
+    mount   = var.settings.mount
   }
 
   connection {

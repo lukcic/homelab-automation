@@ -46,6 +46,7 @@ variable "settings" {
     start        = optional(bool, true)
     protection   = optional(bool, true)
     nesting      = optional(bool, true)
+    mount        = optional(string, "")
   })
   default = {}
 }
