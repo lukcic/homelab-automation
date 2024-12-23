@@ -65,25 +65,25 @@
           driver: 'local'
           driver_opts:
             type: nfs
-            o: 'addr={{ nas_ip }},rw,nfsvers=4'
+            o: 'addr={{ nas_ip }},rw,nfsvers=4,no_all_squash'
             device: ':/mnt/docker-volumes/tubearchivist/es'
         nfs-tubearchivist-redis:
           driver: 'local'
           driver_opts:
             type: nfs
-            o: 'addr={{ nas_ip }},rw,nfsvers=4'
+            o: 'addr={{ nas_ip }},rw,nfsvers=4,no_all_squash'
             device: ':/mnt/docker-volumes/tubearchivist/redis'
         nfs-tubearchivist-cache:
           driver: 'local'
           driver_opts:
             type: nfs
-            o: 'addr={{ nas_ip }},rw,nfsvers=4'
+            o: 'addr={{ nas_ip }},rw,nfsvers=4,no_all_squash'
             device: ':/mnt/docker-volumes/tubearchivist/cache'
         nfs-tubearchivist-media:
           driver: 'local'
           driver_opts:
             type: nfs
-            o: 'addr={{ nas_ip }},rw,nfsvers=4'
+            o: 'addr={{ nas_ip }},rw,nfsvers=4,no_all_squash'
             device: ':/mnt/docker-volumes/tubearchivist/media'
   register: output
   become: true
