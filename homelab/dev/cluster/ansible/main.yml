@@ -1,0 +1,8 @@
+- name: Configure hosts
+  become: true
+  hosts: all
+  tasks:
+    - name: Install packages
+      ansible.builtin.apt:
+        name: fzf
+        state: present

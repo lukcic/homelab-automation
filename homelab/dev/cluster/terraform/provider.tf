@@ -10,6 +10,10 @@ terraform {
       source  = "hashicorp/dns"
       version = "3.4.2"
     }
+    ansible = {
+      source  = "ansible/ansible"
+      version = "1.3.0"
+    }
   }
   backend "s3" {
     bucket         = "lukcic-homelab-terraform-state"
