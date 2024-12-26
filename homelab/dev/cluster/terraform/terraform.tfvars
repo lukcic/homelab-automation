@@ -1,0 +1,5 @@
+environment = "dev"
+node_name   = "k8s-master"
+master_ip   = "192.168.254.2"
+domain      = "lukcic.net"
+ptr_domain  = "254.168.192"
