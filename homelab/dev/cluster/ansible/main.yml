@@ -2,7 +2,144 @@
   become: true
   hosts: all
   tasks:
-    - name: Install packages
-      ansible.builtin.apt:
-        name: fzf
+    - name: Set FQDN hostname
+      ansible.builtin.hostname:
+        name: k8s-master-dev.lukcic.net
+    - name: Disable apparmor
+      ansible.builtin.systemd_service:
+        name: apparmor
+        state: stopped
+        enabled: false
+    - name: Disable SWAP for the current session
+      ansible.builtin.command:
+        cmd: swapoff -a
+      register: swap_status
+      changed_when: swap_status.rc != 0
+    - name: Disable SWAP permanently
+      ansible.builtin.replace:
+        path: /etc/fstab
+        regexp: '^(\s*)([^#\n]+\s+)(\w+\s+)swap(\s+.*)$'
+        replace: '#\1\2\3swap\4'
+        backup: true
+    - name: Enable kernel modules
+      ansible.builtin.lineinfile:
+        line: |
+          overlay
+          br_netfilter
         state: present
+        path: '/etc/modules-load.d/containerd.conf'
+        create: true
+        mode: '0644'
+    - name: Modprobe
+      ansible.builtin.command:
+        cmd: 'modprobe overlay br_netfilter'
+      register: kernel_modules
+      changed_when: kernel_modules.rc != 0
+    - name: Set the kernel parameters
+      ansible.builtin.lineinfile:
+        line: |
+          net.bridge.bridge-nf-call-iptables  = 1
+          net.bridge.bridge-nf-call-ip6tables = 1
+          net.ipv4.ip_forward                 = 1
+        state: present
+        path: /etc/sysctl.d/kubernetes.conf
+        create: true
+        mode: '0644'
+    - name: Apply sysctl params without reboot
+      ansible.builtin.command:
+        cmd: sysctl --system
+      register: sysctl
+      changed_when: sysctl.rc != 0
+    - name: Add Docker signing key
+      ansible.builtin.get_url:
+        url: https://download.docker.com/linux/debian/gpg
+        dest: /etc/apt/keyrings/docker.asc
+        mode: '0644'
+    - name: Add Docker repo
+      ansible.builtin.apt_repository:
+        repo: 'deb [signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian bookworm stable'
+        state: present
+        filename: /etc/apt/sources.list.d/docker.list
+    - name: Install Containerd packages
+      ansible.builtin.apt:
+        name: containerd.io
+        state: present
+        update_cache: true
+      retries: 10
+      delay: 30
+    - name: Configure containerd defaults
+      ansible.builtin.shell:
+        executable: /bin/bash
+        cmd: |
+          set -euo pipefail
+          containerd config default | sudo tee /etc/containerd/config.toml > /dev/null 2>&1
+      register: containerd_config_change
+      changed_when: containerd_config_change.rc != 0
+    - name: Enable Systemd cgroup
+      ansible.builtin.replace:
+        regexp: 'SystemdCgroup = false'
+        replace: 'SystemdCgroup = true'
+        path: /etc/containerd/config.toml
+        backup: true
+    - name: Restart containerd
+      ansible.builtin.systemd_service:
+        name: containerd
+        state: restarted
+        enabled: true
+    - name: Add K8s signing key
+      ansible.builtin.get_url:
+        url: https://pkgs.k8s.io/core:/stable:/v1.32/deb/Release.key
+        dest: /etc/apt/keyrings/kubernetes-apt-keyring.asc
+        mode: '0644'
+    - name: Add K8s repo
+      ansible.builtin.apt_repository:
+        repo: 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.asc] https://pkgs.k8s.io/core:/stable:/v1.32/deb/ /'
+        state: present
+        filename: /etc/apt/sources.list.d/kubernetes.list
+    - name: Install K8s packages
+      ansible.builtin.apt:
+        name:
+          - kubelet
+          - kubeadm
+          - kubectl
+        state: present
+    - name: Hold K8s packages
+      ansible.builtin.command:
+        cmd: 'apt-mark hold {{ item }}'
+      with_items:
+        - kubelet
+        - kubeadm
+        - kubectl
+      register: package_held
+      changed_when: package_held.rc != 0
+    - name: Initialize K8s Control plane
+      ansible.builtin.command:
+        cmd: 'kubeadm init --pod-network-cidr=10.10.0.0/16 --apiserver-advertise-address=192.168.254.2'
+      register: kubeadm_init
+      changed_when: kubeadm_init.rc != 0
+    - name: Save K8s init output
+      delegate_to: localhost
+      become: false
+      ansible.builtin.copy:
+        content: '{{ kubeadm_init }}'
+        dest: '{{ playbook_dir }}/kubeadm_output.json'
+        mode: '0600'
+        remote_src: false
+    - name: Create .kube directory
+      ansible.builtin.file:
+        path: /home/lukcic/.kube
+        state: directory
+        mode: '0700'
+        owner: lukcic
+        group: lukcic
+    - name: Configure kubectl
+      ansible.builtin.copy:
+        remote_src: true
+        src: /etc/kubernetes/admin.conf
+        dest: /home/lukcic/.kube/config
+        mode: '0600'
+        owner: lukcic
+        group: lukcic
+# To join nodes:
+# sudo kubeadm join [MASTER-FQDN.example.com]:6443 --token AABBCCDD --discovery-token-ca-cert-hash sha256: kshdjshfkjshfjkhsjhj
+

@@ -1,5 +1,5 @@
 locals {
-  vm_name      = "${var.node_name}-${var.environment}"
+  vm_name      = "${var.node_name}-${var.environment}.${var.domain}"
   pve_node     = "pve10"
   storage_pool = "local"
 }
@@ -22,6 +22,11 @@ resource "proxmox_cloud_init_disk" "ci" {
     - htop
     - git
     - vim
+    - curl
+    - gnupg2
+    - software-properties-common
+    - apt-transport-https
+    - ca-certificates
   users:
     - name: ${var.user_name}
       gecos: ${var.user_name}
@@ -123,7 +128,7 @@ resource "ansible_playbook" "playbook" {
     ansible_host             = "${var.node_name}-${var.environment}.${var.domain}"
     ansible_user             = "ansible"
     ansible_private_key_file = "~/.ssh/ansible-key-ecdsa.pem"
-    ansible_ssh_common_args  = "-F /dev/null"
+    ansible_ssh_common_args  = "-F /dev/null -o StrictHostKeyChecking=no"
     ansible_config_file      = "${var.project_root}/homelab/dev/cluster/ansible/ansible.cfg"
   }
 }
