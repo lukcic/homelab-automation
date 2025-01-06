@@ -1,39 +1,39 @@
 - name: Install packages
-  include_tasks: install.yml
+  ansible.builtin.include_tasks: install.yml
 
 - name: Generate config from templates
-  include_tasks: templates.yml
+  ansible.builtin.include_tasks: templates.yml
   tags: templates
 
 - name: Copy Bind configuration
-  copy:
-    src: "{{ role_path }}/files/config/{{ item }}"
-    dest: "/etc/bind/{{ item }}"
+  ansible.builtin.copy:
+    src: '{{ role_path }}/files/config/{{ item }}'
+    dest: '/etc/bind/{{ item }}'
     owner: root
     group: bind
     mode: 0644
   with_items:
-    - "named.conf.options"
-    - "rndc.conf"
-    - "tsig.key"
+    - 'named.conf.options'
+    - 'rndc.conf'
+    - 'tsig.key'
   register: bind_config_change
 
 - name: Update /etc/bind permissions
-  shell: chmod g+w /etc/bind
+  ansible.builtin.command: chmod g+w /etc/bind
 
 - name: Create log directory
-  file:
+  ansible.builtin.file:
     path: /var/log/bind
     state: directory
     owner: bind
 
 - name: Check config
-  shell: named-checkconf /etc/bind/named.conf
+  ansible.builtin.command: named-checkconf /etc/bind/named.conf
 
 - name: Copy zone files
-  copy:
-    src: "{{ role_path }}/files/zones/"
-    dest: "/etc/bind/"
+  ansible.builtin.copy:
+    src: '{{ role_path }}/files/zones/'
+    dest: '/etc/bind/'
     owner: root
     group: bind
     mode: 0644
@@ -41,14 +41,26 @@
     force: true
   register: zone_config_change
 
+- name: Freeze domains
+  ansible.builtin.command:
+    cmd: 'rndc freeze {{ item.domain }}'
+  loop: '{{ zones }}'
+  when: zone_config_change
+
 - name: Enable named service
-  service:
+  ansible.builtin.service:
     name: named
     enabled: true
     state: started
 
+- name: Reload (thaw) domains
+  ansible.builtin.command:
+    cmd: 'rndc thaw {{ item.domain }}'
+  loop: '{{ zones }}'
+  when: zone_config_change
+
 - name: Restart Bind when config change
-  service:
+  ansible.builtin.service:
     name: named
     state: restarted
   when:
@@ -56,8 +68,8 @@
     - zone_config_change
 
 - name: Sync Bind journal cron
-  cron:
-    name: "sync bind journal"
+  ansible.builtin.cron:
+    name: 'sync bind journal'
     special_time: hourly
-    job: "rndc sync"
+    job: 'rndc sync'
     user: bind
