@@ -12,6 +12,10 @@ metadata:
   #   gethomepage.dev/icon: homepage.png
   #   gethomepage.dev/name: Homepage
 spec:
+  tls:
+    - hosts:
+        - homepage.lukcic.pl
+      secretName: homepage-lukcic-pl-ssl-cert
   rules:
     - host: "homepage.lukcic.pl"
       http:
