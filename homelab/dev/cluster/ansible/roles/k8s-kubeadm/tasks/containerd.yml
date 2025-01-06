@@ -1,0 +1,48 @@
+- name: Install and configure containerd
+  become: true
+  tags:
+    - vm
+    - Debian
+  block:
+    - name: Add Docker signing key
+      ansible.builtin.get_url:
+        url: https://download.docker.com/linux/debian/gpg
+        dest: /etc/apt/keyrings/docker.asc
+        mode: '0644'
+
+    - name: Add Docker repo
+      ansible.builtin.apt_repository:
+        repo: 'deb [signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian bookworm stable'
+        state: present
+        filename: /etc/apt/sources.list.d/docker.list
+
+    - name: Install Containerd packages
+      ansible.builtin.apt:
+        name: containerd.io
+        state: present
+        update_cache: true
+      retries: 10
+      delay: 30
+
+    - name: Configure containerd defaults
+      ansible.builtin.shell:
+        executable: /bin/bash
+        cmd: |
+          set -euo pipefail
+          containerd config default | sudo tee /etc/containerd/config.toml > /dev/null 2>&1
+      register: containerd_config_change
+      changed_when: containerd_config_change.rc != 0
+
+    - name: Enable Systemd cgroup
+      ansible.builtin.replace:
+        regexp: 'SystemdCgroup = false'
+        replace: 'SystemdCgroup = true'
+        path: /etc/containerd/config.toml
+        backup: true
+      notify: Restart containerd
+
+    - name: Restart containerd
+      ansible.builtin.systemd_service:
+        name: containerd
+        state: restarted
+        enabled: true

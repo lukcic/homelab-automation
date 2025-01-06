@@ -1,0 +1,4 @@
+[nodes]
+k8s-node01-dev.lukcic.net ansible_user=ansible ansible_private_key_file=~/.ssh/ansible-key-ecdsa.pem
+k8s-node02-dev.lukcic.net ansible_user=ansible ansible_private_key_file=~/.ssh/ansible-key-ecdsa.pem
+k8s-node03-dev.lukcic.net ansible_user=ansible ansible_private_key_file=~/.ssh/ansible-key-ecdsa.pem

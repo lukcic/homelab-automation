@@ -21,6 +21,15 @@ variable "proxmox_token_secret" {
   sensitive = true
 }
 
+variable "proxmox_user" {
+  type = string
+}
+
+variable "proxmox_password" {
+  type      = string
+  sensitive = true
+}
+
 variable "node_name" {
   type = string
 }
@@ -52,6 +61,12 @@ variable "ansible_public_key" {
   description = "Ansible user public ssh key"
 }
 
+variable "ansible_private_key_path" {
+  type        = string
+  sensitive   = true
+  description = "Ansible user private ssh key path"
+}
+
 variable "rndc_key" {
   type      = string
   sensitive = true
@@ -69,7 +84,19 @@ variable "ptr_domain" {
   type = string
 }
 
-# variable "container_password" {
-#   type      = string
-#   sensitive = true
-# }
+variable "k8s_nodes" {
+  type = set(object(
+    {
+      name         = string
+      container_id = number
+      pve_node     = string
+      ip           = string
+    }
+  ))
+}
+
+variable "container_password" {
+  type      = string
+  sensitive = true
+}
+

@@ -1,0 +1,45 @@
+- name: Setup control plane
+  tags:
+    - vm
+    - Debian
+  block:
+    - name: Initialize K8s Control plane
+      ansible.builtin.command:
+        cmd: 'kubeadm init --pod-network-cidr={{ pod_network_cidr }} --apiserver-advertise-address={{ apiserver_advertise_address }}'
+      register: kubeadm_init
+      changed_when: kubeadm_init.rc != 0
+
+    - name: Save K8s init output
+      delegate_to: localhost
+      become: false
+      ansible.builtin.copy:
+        content: '{{ kubeadm_init }}'
+        dest: '{{ playbook_dir }}/kubeadm_output.json'
+        mode: '0600'
+        remote_src: false
+
+    - name: Create .kube directory
+      ansible.builtin.file:
+        path: '/home/{{ admin_user }}/.kube'
+        state: directory
+        mode: '0700'
+        owner: '{{ admin_user }}'
+        group: '{{ admin_user }}'
+
+    - name: Configure kubectl
+      ansible.builtin.copy:
+        remote_src: true
+        src: /etc/kubernetes/admin.conf
+        dest: /home/{{ admin_user }}/.kube/config
+        mode: '0600'
+        owner: '{{ admin_user }}'
+        group: '{{ admin_user }}'
+
+    - name: Extract kubeadm join command
+      ansible.builtin.set_fact:
+        kubeadm_join_command: |
+          {{ kubeadm_init.stdout_lines[-3:] | join(' ') }}
+
+    - name: Debug kubeadm join command
+      ansible.builtin.debug:
+        msg: 'Join command: {{ kubeadm_join_command }}'

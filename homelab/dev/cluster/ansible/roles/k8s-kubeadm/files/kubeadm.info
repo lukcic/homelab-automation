@@ -1,0 +1,38 @@
+# 1. Set hostname sudo hostnamectl set-hostname [HOST-NAME]
+# 2. Make sure that FQDN of hostname is resolvable. if /etc/hosts then both entries - with and without domain
+# 3. Disable swap - sudo swapoff -a
+# 4. In /etc/fstab comment out swap disk line
+# 5. Kernel modules 'overlay' and 'br_netfilter' in /etc/modules-load.d/containerd.conf
+# 6. sudo modprobe overlay
+# 7. sudo modprobe br_netfilter
+# 8. Set the kernel parameters: (/etc/sysctl.d/kubernetes.conf  )
+# net.bridge.bridge-nf-call-ip6tables = 1
+# net.bridge.bridge-nf-call-iptables = 1
+# net.ipv4.ip_forward =1
+# 9. Reload changes sudo sysctl --system
+# 10. Install packages
+# 10a. Disable apparmor.
+# 11. Add docker apt repository https://docs.docker.com/engine/install/debian/
+# 12. Update packages and install containerd.io
+# 13. Configure containerd to start using systemd as cgroup:
+# containerd config default | sudo tee /etc/containerd/config.toml > /dev/null 2>&1
+# sudo sed -i 's/SystemdCgroup \= false/SystemdCgroup \= true/g' /etc/containerd/config.toml
+# sudo systemctl restart containerd.service
+# sudo systemctl enable --now containerd.service
+# 14. Add k8s repository
+# 15. Install k8s packages: kubeadm, kubectl, kubelet
+# 16. Disable auto upgrades of above packages: sudo apt-mark hold kubelet kubeadm kubectl
+# 17. Initialize k8s cluster:
+# sudo kubeadm init --pod-network-cidr=x.x.x.x/24 --control-plane-endpoint=FQDN.example.com
+# 18. Save output to file
+# 19. Configure kubectl:
+# mkdir -p $HOME/.kube
+# sudo cp /etc/kubernetes/admin.conf $HOME/.kube/config
+# sudo chown $(id -u):$(id -g) $HOME/.kube/config
+# kubectl cluster-info
+# 20. Install Container Network Interface: Calico
+# https://docs.tigera.io/calico/latest/getting-started/kubernetes/self-managed-onprem/onpremises
+# curl https://raw.githubusercontent.com/projectcalico/calico/v3.29.1/manifests/calico.yaml -O
+# 21. Update CALICO_IPV4_POOL_CIDR in calico.yaml with cidr from  --pod-network-cidr
+# kubectl apply -f calico.yaml
+# kubectl get pods -o -n kube-system

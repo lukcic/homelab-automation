@@ -1,0 +1,4 @@
+admin_user: lukcic
+calico_ver: v3.29.1
+pod_network_cidr: 10.10.0.0/16
+apiserver_advertise_address: '192.168.254.2'

@@ -1,0 +1,9 @@
+galaxy_info:
+  author: lukcic
+  description: Ansible role for installation of K8s using kubeadm.
+  license: BSD-3-Clause
+  min_ansible_version: '2.18'
+  galaxy_tags:
+    - kubernetes
+    - k8s
+dependencies: []

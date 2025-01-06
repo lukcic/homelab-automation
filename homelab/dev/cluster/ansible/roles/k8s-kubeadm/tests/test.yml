@@ -1,5 +1,5 @@
 ---
-- name: Deploy k8s-kubeadm role
+- name: Test run
   hosts: master
   become: true
   debugger: on_failed

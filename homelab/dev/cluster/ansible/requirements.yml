@@ -1,0 +1,5 @@
+roles:
+  - name: k8s-kubeadm
+    src: git+https://github.com/lukcic/ansible.git
+    version: main
+    path: roles/k8s-kubeadm

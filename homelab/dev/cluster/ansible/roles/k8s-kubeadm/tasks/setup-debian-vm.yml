@@ -1,0 +1,55 @@
+- name: Configure hosts
+  become: true
+  tags:
+    - vm
+    - Debian
+  block:
+    - name: Set FQDN hostname
+      ansible.builtin.hostname:
+        name: '{{ ansible_host }}'
+
+    - name: Disable apparmor
+      ansible.builtin.systemd_service:
+        name: apparmor
+        state: stopped
+        enabled: false
+
+    - name: Disable SWAP for the current session
+      ansible.builtin.command:
+        cmd: swapoff -a
+
+    - name: Disable SWAP permanently
+      ansible.builtin.replace:
+        path: /etc/fstab
+        regexp: '^(\s*)([^#\n]+\s+)(\w+\s+)swap(\s+.*)$'
+        replace: '#\1\2\3swap\4'
+        backup: true
+
+    - name: Enable kernel modules
+      ansible.builtin.lineinfile:
+        line: |
+          overlay
+          br_netfilter
+        state: present
+        path: '/etc/modules-load.d/containerd.conf'
+        create: true
+        mode: '0644'
+
+    - name: Modprobe
+      ansible.builtin.command:
+        cmd: 'modprobe overlay br_netfilter'
+
+    - name: Set the kernel parameters
+      ansible.builtin.lineinfile:
+        line: |
+          net.bridge.bridge-nf-call-iptables  = 1
+          net.bridge.bridge-nf-call-ip6tables = 1
+          net.ipv4.ip_forward                 = 1
+        state: present
+        path: /etc/sysctl.d/kubernetes.conf
+        create: true
+        mode: '0644'
+
+    - name: Apply sysctl params without reboot
+      ansible.builtin.command:
+        cmd: sysctl --system

@@ -1,0 +1,31 @@
+- name: Install and configure calico
+  become: true
+  become_user: '{{ admin_user }}'
+  tags:
+    - vm
+    - Debian
+  block:
+    - name: Download Calico manifests
+      ansible.builtin.uri:
+        url: '{{ item }}'
+        dest: '/tmp'
+        mode: '0664'
+      loop:
+        - 'https://raw.githubusercontent.com/projectcalico/calico/{{ calico_ver }}/manifests/tigera-operator.yaml'
+        - 'https://raw.githubusercontent.com/projectcalico/calico/{{ calico_ver }}/manifests/custom-resources.yaml'
+
+    - name: Modify pod network cidr
+      ansible.builtin.replace:
+        regexp: 'cidr: 192.168.0.0/16'
+        replace: 'cidr: {{ pod_network_cidr }}'
+        path: /tmp/custom-resources.yaml
+        backup: true
+
+    - name: Apply Calico manifests
+      kubernetes.core.k8s:
+        state: present
+        src: '/tmp/{{ item }}'
+        wait: true
+      loop:
+        - tigera-operator.yaml
+        - custom-resources.yaml

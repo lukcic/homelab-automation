@@ -20,6 +20,8 @@ resource "proxmox_cloud_init_disk" "ci" {
   package_upgrade: true
   packages:
     - htop
+    - acl
+    - pip
     - git
     - vim
     - curl
@@ -108,27 +110,59 @@ resource "proxmox_vm_qemu" "master_node" {
   serial {
     id = 0
   }
+
+  connection {
+    host        = var.master_ip
+    user        = "ansible"
+    private_key = file(var.ansible_private_key_path)
+    agent       = false
+    timeout     = "5m"
+  }
+
+  provisioner "remote-exec" {
+    inline = ["sleep 30"]
+  }
 }
 
 resource "ansible_host" "master_host" {
   name       = "${var.node_name}-${var.environment}.${var.domain}"
   groups     = ["master"]
   depends_on = [proxmox_vm_qemu.master_node]
+  variables = {
+    host_type = "vm"
+  }
 }
 
+resource "terraform_data" "install_roles" {
+  provisioner "local-exec" {
+    command     = "ansible-galaxy install -r requirements.yml -p roles/"
+    working_dir = "../ansible"
+  }
+}
 resource "ansible_playbook" "playbook" {
-  depends_on = [ansible_host.master_host]
+  depends_on = [ansible_host.master_host, terraform_data.install_roles]
 
   playbook   = "../ansible/main.yml"
   name       = "${var.node_name}-${var.environment}.${var.domain}"
-  replayable = true
+  replayable = false
   verbosity  = 0
+  groups     = ["master"]
 
   extra_vars = {
-    ansible_host             = "${var.node_name}-${var.environment}.${var.domain}"
+    host_type = "vm"
+    # ansible_host             = "${var.node_name}-${var.environment}.${var.domain}"
     ansible_user             = "ansible"
     ansible_private_key_file = "~/.ssh/ansible-key-ecdsa.pem"
     ansible_ssh_common_args  = "-F /dev/null -o StrictHostKeyChecking=no"
     ansible_config_file      = "${var.project_root}/homelab/dev/cluster/ansible/ansible.cfg"
+    ansible_roles_path       = "${var.project_root}/homelab/dev/cluster/ansible/roles"
   }
+}
+
+output "ansible_std_out" {
+  value = ansible_playbook.playbook.ansible_playbook_stdout
+}
+
+output "ansible_std_err" {
+  value = ansible_playbook.playbook.ansible_playbook_stderr
 }
