@@ -19,18 +19,42 @@ data:
   custom.css: ""
   custom.js: ""
   bookmarks.yaml: |
+    - Routines:
+        - Personal Security Checklist:
+            - abbr: PSC
+              href: https://digital-defense.io/
+        - Linux Debugging Academy:
+            - abbr: ADL
+              href: https://wiedza.mrugalski.pl/akademia-debugowania-linuksa/
+    - Courses:
+        - K8s Piyush:
+            - abbr: K8s
+              href: https://www.youtube.com/playlist?list=PLl4APkPHzsUUOkOv3i62UidrLmSB8DcGC
+        - K8s CTB Nuggets:
+            - abbr: CTB
+              href: https://www.youtube.com/playlist?list=PL7D4X4pSOcCF1Y3SHHsLwczHH-uguuoEd
+    - Watch later:
+        - Cyberintro:
+            - abbr: CIn
+              href: https://tubearchivist.lukcic.pl/channel/UCfxk5idSdKXTEqAOa8YXIgw/
     - Developer:
         - Github:
             - abbr: GH
               href: https://github.com/
   services.yaml: |
-    - Networking:
+    - Network:
         - pfSense:
             href: https://fw.{{ homelab_dashboard_proxy_domain }}/
-            description: pfSense Firewall
+            description: PfSense Firewall
             siteMonitor: http://{{ homelab_dashboard_pfsense_ip }}
             ping: {{ homelab_dashboard_pfsense_ip }}
-            icon: si-pfsense-#212121
+            icon: si-pfsense-#fafafa
+        - UpSnap:
+            href: https://upsnap.{{ homelab_dashboard_proxy_domain }}/
+            description: UpSnap
+            siteMonitor: http://{{ homelab_dashboard_docker01_ip }}:8090
+            ping: {{ homelab_dashboard_docker01_ip }}
+            icon: mdi-power-#fafafa
         - UniFi:
             href: https://unifi.{{ homelab_dashboard_proxy_domain }}/
             description: Unifi Network
@@ -102,17 +126,18 @@ data:
               url: https://pbs.{{ homelab_dashboard_proxy_domain }}
               username: {{ homelab_dashboard_pbs_user }}
               password: {{ homelab_dashboard_pbs_token }}         
-    - Services:
-        - TubeArchivist:
-            href: https://tubearchivist.{{ homelab_dashboard_proxy_domain }}/
-            description: TubeArchivist
-            siteMonitor: http://tubearchivist.{{ homelab_dashboard_net_domain }}:8000
-            ping: {{ homelab_dashboard_tube_archivist_ip }}
-            icon: si-youtube-#00202f
+        - Portainer:
+            href: https://docker01.{{ homelab_dashboard_proxy_domain }}/
+            description: Portainer on Docker01
+            siteMonitor:  http://{{ homelab_dashboard_docker01_ip }}:9000
+            ping: {{ homelab_dashboard_docker01_ip }}
+            icon: si-portainer-#13BEF9
             widget:
-              type: tubearchivist
-              url: http://tubearchivist.{{ homelab_dashboard_net_domain }}:8000
-              key: {{ homelab_dashboard_tube_archivist_token }}
+              type: portainer
+              url: http://{{ homelab_dashboard_docker01_ip }}:9000
+              env: 2
+              key: {{ homelab_dashboard_portainer_token }}      
+    - Services:
         - SyncThing:
             href: https://syncthing.{{ homelab_dashboard_proxy_domain }}/
             description: SyncThing
@@ -123,8 +148,49 @@ data:
             href: https://semaphore.{{ homelab_dashboard_proxy_domain }}/
             description: SyncThing
             siteMonitor: http://semaphore.{{ homelab_dashboard_net_domain }}:3000
-            ping: {{ homelab_dashboard_semaphore_ip }}
+            ping: {{ homelab_dashboard_docker01_ip }}
             icon: si-ansible-#EE0000
+        - PG Admin:
+            href: https://pgsql.{{ homelab_dashboard_proxy_domain }}/
+            description: PostgreSQL Admin
+            siteMonitor: http://pgsql.{{ homelab_dashboard_net_domain }}
+            ping: {{ homelab_dashboard_pgsql_ip }}
+            icon: si-postgresql-#4169E1
+        - TubeArchivist:
+            href: https://tubearchivist.{{ homelab_dashboard_proxy_domain }}/
+            description: TubeArchivist
+            siteMonitor: http://tubearchivist.{{ homelab_dashboard_net_domain }}:8000
+            ping: {{ homelab_dashboard_tube_archivist_ip }}
+            icon: si-youtube-#00202f
+            widget:
+              type: tubearchivist
+              url: http://tubearchivist.{{ homelab_dashboard_net_domain }}:8000
+              key: {{ homelab_dashboard_tube_archivist_token }}
+        - Jellyfin:
+            href: https://jellyfin.{{ homelab_dashboard_proxy_domain }}/
+            description: Jellyfin
+            siteMonitor: http://jellyfin.{{ homelab_dashboard_net_domain }}:8096
+            ping: {{ homelab_dashboard_jellyfin_ip }}
+            icon: si-jellyfin-#00A4DC
+            widget:
+              type: jellyfin
+              url: http://jellyfin.{{ homelab_dashboard_net_domain }}:8096
+              key: {{ homelab_dashboard_jellyfin_token }}
+              enableBlocks: true 
+              enableNowPlaying: true 
+              enableUser: false 
+              showEpisodeNumber: true 
+              expandOneStreamToTwoRows: false 
+        - Paperless-ngx:
+            href: https://paperless.{{ homelab_dashboard_proxy_domain }}/
+            description: Paperless-ngx
+            siteMonitor: http://docker01.{{ homelab_dashboard_net_domain }}:7000
+            ping: {{ homelab_dashboard_docker01_ip }}
+            icon: si-paperlessngx-#17541F
+            widget:
+              type: paperlessngx
+              url: https://paperless.{{ homelab_dashboard_proxy_domain }}
+              key: {{ homelab_dashboard_paperless_token }}
 
   widgets.yaml: |
     - kubernetes:
