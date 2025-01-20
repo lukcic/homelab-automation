@@ -150,6 +150,12 @@ data:
             siteMonitor: http://semaphore.{{ homelab_dashboard_net_domain }}:3000
             ping: {{ homelab_dashboard_docker01_ip }}
             icon: si-ansible-#EE0000
+        - Wallabag:
+            href: https://wb.{{ homelab_dashboard_proxy_domain }}/
+            description: SyncThing
+            siteMonitor: http://{{ homelab_dashboard_docker01_ip }}:3030
+            ping: {{ homelab_dashboard_docker01_ip }}
+            icon: si-wallabag-#3F6184
         - PG Admin:
             href: https://pgsql.{{ homelab_dashboard_proxy_domain }}/
             description: PostgreSQL Admin

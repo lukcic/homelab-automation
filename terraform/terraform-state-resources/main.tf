@@ -14,7 +14,7 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "terraform_state" {
-  bucket = "lukcic-homelab-terrafrom-state"
+  bucket = "lukcic-homelab-terraform-state"
 }
 
 resource "aws_s3_bucket_versioning" "state_bucket_versioning" {

@@ -6,10 +6,10 @@ terraform {
     }
   }
   backend "s3" {
-    bucket         = "lukcic-homelab-terrafrom-state"
+    bucket         = "lukcic-homelab-terraform-state"
     key            = "proxy.lukcic.net"
     region         = "eu-north-1"
-    dynamodb_table = "lukcic-homelab-terrafrom-lock-proxy"
+    dynamodb_table = "lukcic-homelab-terraform-locks"
     encrypt        = true
   }
 }

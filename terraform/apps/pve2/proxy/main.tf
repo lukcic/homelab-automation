@@ -6,10 +6,10 @@ locals {
 }
 
 module "pve-ct" {
-  source = "../../../modules/pve-ct"
+  source = "git::ssh://git@github.com/lukcic/terraform-modules.git//proxmox/pve-ct?ref=main"
 
   container_id       = 6969
-  target_node        = "pve1"
+  target_node        = "pve2"
   hostname           = "${local.app-name}.lukcic.net"
   container_password = var.container_password
 
@@ -20,6 +20,7 @@ module "pve-ct" {
   hardware = {
     memory  = 512
     balloon = 512
+    swap    = 0
   }
 
   rootfs = {
@@ -33,10 +34,11 @@ module "pve-ct" {
 
   network = [
     {
-      ip  = local.ip
-      dns = "192.168.69.254"
-      gw  = "192.168.69.254"
-      tag = "69"
+      ip     = local.ip
+      dns    = "192.168.254.53"
+      gw     = "192.168.69.254"
+      bridge = "vmbr1"
+      tag    = "69"
     }
   ]
 

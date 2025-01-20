@@ -7,7 +7,7 @@ locals {
 }
 
 module "pve-ct" {
-  source = "../../../modules/pve-ct"
+  source = "git::ssh://git@github.com/lukcic/terraform-modules.git//proxmox/pve-ct?ref=main"
 
   container_id       = 25480
   hostname           = local.app-name
