@@ -1,5 +1,3 @@
-#move it to the pve1 and add second nic in 33 network
-
 locals {
   app-name = "proxy"
   ip       = "192.168.69.69"
