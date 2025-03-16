@@ -41,14 +41,11 @@ data:
         - Github:
             - abbr: GH
               href: https://github.com/
+        - Discord:
+            - abbr: DS
+              href: https://discord.com
   services.yaml: |
     - Network:
-        - pfSense:
-            href: https://fw.{{ homelab_dashboard_proxy_domain }}/
-            description: PfSense Firewall
-            siteMonitor: http://{{ homelab_dashboard_pfsense_ip }}
-            ping: {{ homelab_dashboard_pfsense_ip }}
-            icon: si-pfsense-#fafafa
         - UpSnap:
             href: https://upsnap.{{ homelab_dashboard_proxy_domain }}/
             description: UpSnap
@@ -146,13 +143,13 @@ data:
             icon: si-syncthing-#0891D1
         - Ansible Semaphore:
             href: https://semaphore.{{ homelab_dashboard_proxy_domain }}/
-            description: SyncThing
+            description: Ansible Semaphore
             siteMonitor: http://semaphore.{{ homelab_dashboard_net_domain }}:3000
             ping: {{ homelab_dashboard_docker01_ip }}
             icon: si-ansible-#EE0000
         - Wallabag:
             href: https://wb.{{ homelab_dashboard_proxy_domain }}/
-            description: SyncThing
+            description: Wallabag
             siteMonitor: http://{{ homelab_dashboard_docker01_ip }}:3030
             ping: {{ homelab_dashboard_docker01_ip }}
             icon: si-wallabag-#3F6184
