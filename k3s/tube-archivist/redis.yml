@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: tube-archivist-redis
+  namespace: tube-archivist
+spec:
+  selector:
+    app: tube-archivist-redis
+  ports:
+    - protocol: TCP
+      port: 6379
+      targetPort: 6379
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tube-archivist-redis
+  namespace: tube-archivist
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tube-archivist-redis
+  template:
+    metadata:
+      labels:
+        app: tube-archivist-redis
+    spec:
+      containers:
+        - name: redis
+          image: redis/redis-stack-server
+          ports:
+            - containerPort: 6379
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+            requests:
+              cpu: "250m"
+              memory: "256Mi"
