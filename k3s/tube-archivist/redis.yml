@@ -27,6 +27,8 @@ spec:
       labels:
         app: tube-archivist-redis
     spec:
+      nodeSelector:
+        kubernetes.io/hostname: k3s-node1
       containers:
         - name: redis
           image: redis/redis-stack-server

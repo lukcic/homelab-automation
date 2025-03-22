@@ -6,6 +6,7 @@ metadata:
     type: local
 spec:
   storageClassName: "manual"
+  persistentVolumeReclaimPolicy: Delete
   capacity:
     storage: 1000Gi
   accessModes:
@@ -35,6 +36,7 @@ metadata:
     type: local
 spec:
   storageClassName: manual
+  persistentVolumeReclaimPolicy: Delete
   capacity:
     storage: 10Gi
   accessModes:
@@ -87,6 +89,8 @@ spec:
       labels:
         app: tube-archivist
     spec:
+      nodeSelector:
+        kubernetes.io/hostname: k3s-node1
       containers:
         - name: tube-archivist
           image: bbilly1/tubearchivist

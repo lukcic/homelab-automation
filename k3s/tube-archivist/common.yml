@@ -32,12 +32,13 @@ data:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: tube-archivist-ingress
+  name: tube-archivist-ingress-https
   namespace: tube-archivist
   labels:
     app.kubernetes.io/name: tube-archivist
-  # annotations:
-  #   kubernetes.io/ingress.className: "traefik"
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.tls: "true"
 spec:
   tls:
     - hosts:
@@ -55,11 +56,34 @@ spec:
                 port:
                   number: 8000
 ---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tube-archivist-ingress-http
+  namespace: tube-archivist
+  labels:
+    app.kubernetes.io/name: tube-archivist
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+    # traefik.ingress.kubernetes.io/router.middlewares: kube-system-https-redirect@kubernetescrd
+spec:
+  rules:
+    - host: "ta.lukcic.pl"
+      http:
+        paths:
+          - path: "/"
+            pathType: Prefix
+            backend:
+              service:
+                name: tube-archivist
+                port:
+                  number: 8000
+---
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: tube-archivist
-  namespace: tube-archivist
+  namespace: default
 spec:
   secretName: tube-archivist-lukcic-pl-ssl-cert
   issuerRef:

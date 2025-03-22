@@ -6,6 +6,7 @@ metadata:
     type: local
 spec:
   storageClassName: manual
+  persistentVolumeReclaimPolicy: Delete
   capacity:
     storage: 10Gi
   accessModes:
@@ -57,6 +58,8 @@ spec:
       labels:
         app: "tube-archivist-elasticsearch"
     spec:
+      nodeSelector:
+        kubernetes.io/hostname: k3s-node1
       initContainers:
         - name: init-tube-archivist-elasticsearch
           image: busybox
