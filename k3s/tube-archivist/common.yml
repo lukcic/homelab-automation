@@ -10,7 +10,7 @@ metadata:
   name: tube-archivist-config
   namespace: tube-archivist
 data:
-  TA_HOST: "k3s-master.lukcic.net k3s-node01.lukcic.net ta.lukcic.pl"
+  TA_HOST: "yt.lukcic.pl"
   ES_URL: "http://tube-archivist-elasticsearch:9200"
   REDIS_CON: "redis://tube-archivist-redis:6379"
   HOST_UID: "568"
@@ -42,10 +42,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - ta.lukcic.pl
+        - yt.lukcic.pl
       secretName: tube-archivist-lukcic-pl-ssl-cert
   rules:
-    - host: "ta.lukcic.pl"
+    - host: yt.lukcic.pl
       http:
         paths:
           - path: "/"
@@ -65,10 +65,10 @@ metadata:
     app.kubernetes.io/name: tube-archivist
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: web
-    # traefik.ingress.kubernetes.io/router.middlewares: kube-system-https-redirect@kubernetescrd
+    traefik.ingress.kubernetes.io/router.middlewares: kube-system-https-redirect@kubernetescrd
 spec:
   rules:
-    - host: "ta.lukcic.pl"
+    - host: yt.lukcic.pl
       http:
         paths:
           - path: "/"
@@ -90,4 +90,4 @@ spec:
     name: cloudflare-cluster-issuer
     kind: ClusterIssuer
   dnsNames:
-    - ta.lukcic.pl
+    - yt.lukcic.pl
