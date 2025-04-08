@@ -55,16 +55,14 @@ data:
         - UniFi:
             href: https://unifi.{{ homelab_dashboard_proxy_domain }}/
             description: Unifi Network
-            siteMonitor: https://unifi.{{ homelab_dashboard_net_domain }}:8443
+            siteMonitor: https://unifi.{{ homelab_dashboard_proxy_domain }}
             ping: {{ homelab_dashboard_unifi_ip }}
             icon: si-ubiquiti-#0559C9
             widget:
               type: unifi
-              url: https://unifi.{{ homelab_dashboard_net_domain }}:8443
-              username: {{ homelab_dashboard_unifi_user }}
-              password: {{ homelab_dashboard_unifi_password }}
-              site: Mieszkanie
-              fields: ["wlan_devices", "wlan_users", "lan_users", "lan"]
+              url: https://unifi.{{ homelab_dashboard_proxy_domain }}
+              key: {{ homelab_dashboard_unifi_api_key }}
+              fields: ["wlan_devices", "wlan_users", "lan_users", "wlan"]
         - Adguard:
             href: https://adguard.{{ homelab_dashboard_proxy_domain }}/
             description: Adguard DNS
@@ -96,9 +94,9 @@ data:
             ping: {{ homelab_dashboard_pve1_ip }}
             widget:
               type: proxmox
-              url: https://{{ homelab_dashboard_pve1_ip }}:8006
-              username: {{ homelab_dashboard_pve1_user }}
-              password: {{ homelab_dashboard_pve1_token }}
+              url: https://{{ homelab_dashboard_pve2_ip }}:8006
+              username: {{ homelab_dashboard_pve2_user }}
+              password: {{ homelab_dashboard_pve2_token }}
               node: pve1
         - PVE2:
             href: https://pve2.{{ homelab_dashboard_proxy_domain }}/
@@ -135,11 +133,22 @@ data:
               env: 2
               key: {{ homelab_dashboard_portainer_token }}      
     - Services:
+        - GitLab:
+            href: https://git.{{ homelab_dashboard_proxy_domain }}/
+            description: GitLab
+            siteMonitor: http://git.{{ homelab_dashboard_net_domain }}/-/readiness?token={{ homelab_dashboard_gitlab_health_token }}
+            ping: {{ homelab_dashboard_syncthing_ip }}
+            icon: si-gitlab-#FC6D26
+            widget:
+              type: gitlab
+              url: http://git.{{ homelab_dashboard_net_domain }}
+              key: {{ homelab_dashboard_gitlab_pat }}
+              user_id: 2
         - SyncThing:
             href: https://syncthing.{{ homelab_dashboard_proxy_domain }}/
             description: SyncThing
             siteMonitor: http://syncthing.{{ homelab_dashboard_net_domain }}:8384
-            ping: {{ homelab_dashboard_syncthing_ip }}
+            ping: {{ homelab_dashboard_gitlab_ip }}
             icon: si-syncthing-#0891D1
         - Ansible Semaphore:
             href: https://semaphore.{{ homelab_dashboard_proxy_domain }}/
