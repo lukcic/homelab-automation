@@ -20,4 +20,4 @@
     - name: Patch deployment
       ansible.builtin.command: # noqa: no-changed-when
         cmd: |
-          kubectl patch deployment homepage -p '{"spec":{"template":{"metadata":{"annotations":{"configmap-version":"{{ current_timestamp }}"}}}}}'
+          kubectl -n default patch deployment homepage -p '{"spec":{"template":{"metadata":{"annotations":{"configmap-version":"{{ current_timestamp }}"}}}}}'

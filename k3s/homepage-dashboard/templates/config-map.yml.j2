@@ -169,14 +169,14 @@ data:
             ping: {{ homelab_dashboard_pgsql_ip }}
             icon: si-postgresql-#4169E1
         - TubeArchivist:
-            href: https://tubearchivist.{{ homelab_dashboard_proxy_domain }}/
+            href: https://yt.{{ homelab_dashboard_proxy_domain }}/
             description: TubeArchivist
-            siteMonitor: http://tubearchivist.{{ homelab_dashboard_net_domain }}:8000
+            siteMonitor: https://yt.{{ homelab_dashboard_proxy_domain }}
             ping: {{ homelab_dashboard_tube_archivist_ip }}
             icon: si-youtube-#00202f
             widget:
               type: tubearchivist
-              url: http://tubearchivist.{{ homelab_dashboard_net_domain }}:8000
+              url: https://yt.{{ homelab_dashboard_proxy_domain }}
               key: {{ homelab_dashboard_tube_archivist_token }}
         - Jellyfin:
             href: https://jellyfin.{{ homelab_dashboard_proxy_domain }}/
