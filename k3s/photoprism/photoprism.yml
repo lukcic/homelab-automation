@@ -1,0 +1,47 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: photoprism
+  namespace: photoprism
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: photoprism
+  template:
+    metadata:
+      labels:
+        app: photoprism
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: k3s-node1
+      containers:
+        - name: photoprism
+          image: photoprism/photoprism:240915
+          ports:
+            - containerPort: 2342
+          envFrom:
+            - configMapRef:
+                name: photoprism-config
+            - secretRef:
+                name: photoprism-secrets
+          volumeMounts:
+            - name: photoprism-storage
+              mountPath: /photoprism/storage
+            - name: photoprism-originals
+              mountPath: /photoprism/originals
+          resources:
+            limits:
+              cpu: "4000m"
+              memory: "4Gi"
+            requests:
+              cpu: "1000m"
+              memory: "1Gi"
+      volumes:
+        - name: photoprism-storage
+          persistentVolumeClaim:
+            claimName: photoprism-storage
+        - name: photoprism-originals
+          persistentVolumeClaim:
+            claimName: photoprism-originals
