@@ -10,7 +10,7 @@ metadata:
   name: tube-archivist-config
   namespace: tube-archivist
 data:
-  TA_HOST: "yt.lukcic.pl"
+  TA_HOST: "https://yt.lukcic.pl k3s-node01.lukcic.net"
   ES_URL: "http://tube-archivist-elasticsearch:9200"
   REDIS_CON: "redis://tube-archivist-redis:6379"
   HOST_UID: "568"
@@ -83,7 +83,7 @@ apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: tube-archivist
-  namespace: default
+  namespace: tube-archivist
 spec:
   secretName: tube-archivist-lukcic-pl-ssl-cert
   issuerRef:
