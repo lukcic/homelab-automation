@@ -32,7 +32,7 @@ spec:
             - name: photoprism-originals
               mountPath: /photoprism/originals
             - name: photoprism-imports
-              mountPath: /photoprism/imports
+              mountPath: /photoprism/import
           resources:
             limits:
               cpu: "4000m"

@@ -24,7 +24,7 @@ metadata:
     app: photoprism
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: web
-    traefik.ingress.kubernetes.io/router.tls: "false"
+    traefik.ingress.kubernetes.io/router.middlewares: kube-system-https-redirect@kubernetescrd
 spec:
   rules:
     - host: foto.lukcic.pl
@@ -37,3 +37,43 @@ spec:
                 name: photoprism
                 port:
                   number: 2342
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: photoprism-ingress-https
+  namespace: photoprism
+  labels:
+    app: photoprism
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.tls: "true"
+spec:
+  tls:
+    - hosts:
+        - foto.lukcic.pl
+      secretName: photoprism-lukcic-pl-ssl-cert
+  rules:
+    - host: foto.lukcic.pl
+      http:
+        paths:
+          - path: "/"
+            pathType: Prefix
+            backend:
+              service:
+                name: photoprism
+                port:
+                  number: 2342
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: photoprism
+  namespace: photoprism
+spec:
+  secretName: photoprism-lukcic-pl-ssl-cert
+  issuerRef:
+    name: cloudflare-cluster-issuer
+    kind: ClusterIssuer
+  dnsNames:
+    - foto.lukcic.pl
