@@ -66,3 +66,37 @@ spec:
   selector:
     matchLabels:
       name: photoprism-originals
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: photoprism-imports
+  labels:
+    type: local
+    name: photoprism-imports
+spec:
+  storageClassName: ""
+  persistentVolumeReclaimPolicy: Delete
+  capacity:
+    storage: 50Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: /mnt/photoprism/imports
+    type: DirectoryOrCreate
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: photoprism-imports
+  namespace: photoprism
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: ""
+  resources:
+    requests:
+      storage: 50Gi
+  selector:
+    matchLabels:
+      name: photoprism-imports

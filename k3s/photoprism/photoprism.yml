@@ -18,7 +18,7 @@ spec:
         kubernetes.io/hostname: k3s-node1
       containers:
         - name: photoprism
-          image: photoprism/photoprism:240915
+          image: photoprism/photoprism:250321
           ports:
             - containerPort: 2342
           envFrom:
@@ -31,6 +31,8 @@ spec:
               mountPath: /photoprism/storage
             - name: photoprism-originals
               mountPath: /photoprism/originals
+            - name: photoprism-imports
+              mountPath: /photoprism/imports
           resources:
             limits:
               cpu: "4000m"
@@ -45,3 +47,6 @@ spec:
         - name: photoprism-originals
           persistentVolumeClaim:
             claimName: photoprism-originals
+        - name: photoprism-imports
+          persistentVolumeClaim:
+            claimName: photoprism-imports
