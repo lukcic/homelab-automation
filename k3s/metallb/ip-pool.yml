@@ -1,0 +1,17 @@
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: vlan33-pool
+  namespace: metallb-system
+spec:
+  addresses:
+    - 192.168.33.250-192.168.33.252
+---
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: vlan33-adv
+  namespace: metallb-system
+spec:
+  interfaces:
+    - eth1
