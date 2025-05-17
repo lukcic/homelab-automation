@@ -27,6 +27,8 @@ spec:
             - secretRef:
                 name: photoprism-secrets
           volumeMounts:
+            # - name: dri-device
+            #   mountPath: /dev/dri
             - name: photoprism-storage
               mountPath: /photoprism/storage
             - name: photoprism-originals
@@ -35,12 +37,16 @@ spec:
               mountPath: /photoprism/import
           resources:
             limits:
-              cpu: "4000m"
+              cpu: "8000m"
               memory: "4Gi"
             requests:
               cpu: "1000m"
               memory: "1Gi"
       volumes:
+        # - name: dri-device
+        #   hostPath:
+        #     path: /dev/dri
+        #     type: ""
         - name: photoprism-storage
           persistentVolumeClaim:
             claimName: photoprism-storage
