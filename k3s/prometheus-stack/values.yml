@@ -598,7 +598,7 @@ alertmanager:
     # ingressClassName: nginx
 
     annotations:
-      traefik.ingress.kubernetes.io/router.entrypoints: web
+      traefik.ingress.kubernetes.io/router.entrypoints: websecure
 
     labels: {}
 
@@ -1263,7 +1263,7 @@ grafana:
     ## Annotations for Grafana Ingress
     ##
     annotations:
-      traefik.ingress.kubernetes.io/router.entrypoints: web
+      traefik.ingress.kubernetes.io/router.entrypoints: websecure
       # kubernetes.io/ingress.class: nginx
       # kubernetes.io/tls-acme: "true"
 
@@ -3646,7 +3646,7 @@ prometheus:
     # ingressClassName: nginx
 
     annotations:
-      traefik.ingress.kubernetes.io/router.entrypoints: web
+      traefik.ingress.kubernetes.io/router.entrypoints: websecure
     labels: {}
 
     ## Redirect ingress to an additional defined port on the service
