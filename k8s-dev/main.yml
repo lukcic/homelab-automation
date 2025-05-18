@@ -1,0 +1,53 @@
+---
+- hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: Get site path
+      shell: pwd
+      register: site_directory
+      tags: kubespray
+    # - name: Install specified python requirements
+    #   ansible.builtin.pip:
+    #     chdir: ./kubespray
+    #     requirements: requirements.txt
+      ignore_errors: true
+    - name: Copy inventory dir
+      copy:
+        src: ./hosts.yaml
+        dest: kubespray/inventory/    
+
+- name: Setup host
+  vars_files: secrets.yml
+  hosts: all
+  become: true
+  gather_facts: yes
+  roles:
+    - common/network # noqa: syntax-check[specific]
+    - common/packages
+    - common/users
+    - common/shell
+    - shutdown-user
+    # - role: common/resolv-conf
+    #   resolv_conf_search:
+    #     - lukcic.net
+    #   resolv_conf_nameservers:
+    #     - '192.168.254.53'
+    #     - '192.168.254.20'
+    #     - '1.1.1.1'
+
+# - hosts: all
+#   become: true
+#   gather_facts: yes
+#   tasks:
+#     - name: Enable neofetch
+#       lineinfile:
+#         path: ~/.bashrc
+#         line: 'neofetch'
+#         state: present
+#         insertafter: EOF
+#         create: true
+
+# ansible-playbook -i kubespray/inventory/lukcic/hosts.yaml --become kubespray/cluster.yml
+# --become-user=debian
+
+# ln -s /etc/kubernetes/admin.conf ~/.kube/config

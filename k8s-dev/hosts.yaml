@@ -1,0 +1,47 @@
+all:
+  hosts:
+    k8s-dev01:
+      ansible_host: 192.168.254.210
+      ansible_user: root
+      ansible_private_key_file: ~/.ssh/proxmox-root.pem
+      ansible_python_interpreter: /usr/bin/python3
+      etcd_member_name: etcd1
+    k8s-dev02:
+      ansible_host: 192.168.254.220
+      # ip: 192.168.254.172
+      # access_ip: 192.168.254.172
+      ansible_user: root
+      ansible_private_key_file: ~/.ssh/proxmox-root.pem
+      ansible_python_interpreter: /usr/bin/python3
+      etcd_member_name: etcd2
+    k8s-dev03:
+      ansible_host: 192.168.254.230
+      # ip: 192.168.254.173
+      # access_ip: 192.168.254.173
+      ansible_user: root
+      ansible_private_key_file: ~/.ssh/proxmox-root.pem
+      ansible_python_interpreter: /usr/bin/python3
+      etcd_member_name: etcd3
+  children:
+    kube_control_plane:
+      hosts:
+        k8s-dev01:
+        k8s-dev02:
+        k8s-dev03:
+    kube_node:
+      hosts:
+        k8s-dev01:
+        k8s-dev02:
+        k8s-dev03:
+    etcd:
+      hosts:
+        k8s-dev01:
+        k8s-dev02:
+        k8s-dev03:
+    k8s_cluster:
+      children:
+        kube_control_plane:
+        kube_node:
+        calico_rr:
+    calico_rr:
+      hosts: {}

@@ -6,7 +6,7 @@ all_users: # noqa: var-naming[no-role-prefix]
   - name: ansible
     groups: wheel
     shell: /bin/bash
-    uid: 3001
+    uid: 1000
 
   # - name: docker
   #   groups: docker

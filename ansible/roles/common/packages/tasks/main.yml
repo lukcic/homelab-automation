@@ -3,7 +3,6 @@
     pkg:
       - git
       - jq
-      - tldr
       - sudo
       - apt-transport-https
       - ca-certificates

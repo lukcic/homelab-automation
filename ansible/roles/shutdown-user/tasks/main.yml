@@ -1,0 +1,21 @@
+- name: Create user for Upsnap
+  tags: shutdown
+  become: true
+  block:
+    - name: Create a new user
+      ansible.builtin.user:
+        name: upsnap
+        password: "{{ upsnap_user_password | password_hash('sha512') }}"
+        shell: /bin/bash
+
+    - name: Create a sudoers file for the user to allow shutdown only
+      ansible.builtin.copy:
+        content: "{{ 'upsnap ALL=(ALL) NOPASSWD: /usr/sbin/poweroff' }}"
+        dest: /etc/sudoers.d/upsnap
+        mode: '0440'
+
+    - name: Verify sudoers syntax
+      ansible.builtin.command: visudo -cf /etc/sudoers.d/upsnap
+      register: user_created
+      changed_when: user_created.rc != 0
+      ignore_errors: false
