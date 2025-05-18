@@ -8,16 +8,12 @@ all:
       etcd_member_name: etcd1
     k8s-dev02:
       ansible_host: 192.168.254.220
-      # ip: 192.168.254.172
-      # access_ip: 192.168.254.172
       ansible_user: root
       ansible_private_key_file: ~/.ssh/proxmox-root.pem
       ansible_python_interpreter: /usr/bin/python3
       etcd_member_name: etcd2
     k8s-dev03:
       ansible_host: 192.168.254.230
-      # ip: 192.168.254.173
-      # access_ip: 192.168.254.173
       ansible_user: root
       ansible_private_key_file: ~/.ssh/proxmox-root.pem
       ansible_python_interpreter: /usr/bin/python3
