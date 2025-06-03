@@ -4,7 +4,7 @@
   ansible.builtin.file:
     path: ~{{ user.name }}/.ssh/authorized_keys
     state: absent
-  when: users_created is changed # noqa: no-handler
+  # when: users_created is changed # noqa: no-handler
 
 - name: Find all auth keys in the directory for {{ user.name }}
   become: false
@@ -14,7 +14,7 @@
     patterns: '*.pub'
     file_type: file
   register: user_keys_paths
-  when: users_created is changed # noqa: no-handler
+  # when: users_created is changed # noqa: no-handler
 
 - name: Copy auth keys for {{ user.name }}
   ansible.posix.authorized_key:
@@ -22,4 +22,4 @@
     state: present
     key: "{{ lookup('file', item.path) }}"
   with_items: '{{ user_keys_paths.files }}'
-  when: users_created is changed # noqa: no-handler
+  # when: users_created is changed # noqa: no-handler
