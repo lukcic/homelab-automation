@@ -5,7 +5,7 @@ all_users: # noqa: var-naming[no-role-prefix]
   - name: ansible
     groups: wheel
     shell: /bin/bash
-    uid: 1000
+    uid: 3333
 
   - name: lukcic
     groups: wheel
