@@ -19,7 +19,7 @@
     group: '{{ item.name }}'
     groups: '{{ item.groups }}'
     append: true
-    password: "{{ basic_user_password | password_hash('sha512', 'mysecretsalt') }}"
+    # password: "{{ basic_user_password | password_hash('sha512', 'mysecretsalt') }}"
   with_items: '{{ all_users }}'
   register: users_created
 
