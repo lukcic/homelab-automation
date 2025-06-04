@@ -1,20 +1,12 @@
-- name: Install required system packages
-  ansible.builtin.apt:
-    pkg:
-      - git
-      - jq
-      - sudo
-      - apt-transport-https
-      - ca-certificates
-      - curl
-      - software-properties-common
-      - virtualenv
-      - python3-pip
-      - python3-setuptools
-      - python3-apt
-      - neofetch
+- name: Install standard packages
+  ansible.builtin.package:
+    name: "{{ standard_packages }}"
     state: present
-    update_cache: true
-# TODO:
-# - set of common packages for all hosts
-# - possibility for adding own package names from site
+  become: true
+
+- name: Install additional packages (if provided)
+  ansible.builtin.package:
+    name: "{{ extra_packages }}"
+    state: present
+  when: extra_packages | length > 0
+  become: true

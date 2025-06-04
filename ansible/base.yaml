@@ -1,0 +1,9 @@
+- name: Install packages add users
+  become: true
+  hosts: all
+  roles:
+    - role: common/packages
+      vars:
+        extra_packages:
+          - bat
+    - role: common/users

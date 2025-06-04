@@ -1,0 +1,13 @@
+standard_packages:
+  - curl
+  - vim
+  - htop
+  - git
+  - unzip
+  - jq
+  - sudo
+  - apt-transport-https
+  - ca-certificates
+  - software-properties-common
+
+extra_packages: []

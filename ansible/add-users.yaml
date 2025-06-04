@@ -1,5 +1,0 @@
-- name: Add users
-  become: true
-  hosts: all
-  roles:
-    - common/users
