@@ -1,9 +1,9 @@
-- name: Cleanup all user authorized keys
-  become: true
-  become_user: '{{ user.name }}'
-  ansible.builtin.file:
-    path: ~{{ user.name }}/.ssh/authorized_keys
-    state: absent
+# - name: Cleanup all user authorized keys
+#   become: true
+#   become_user: '{{ user.name }}'
+#   ansible.builtin.file:
+#     path: ~{{ user.name }}/.ssh/authorized_keys
+#     state: absent
   # when: users_created is changed # noqa: no-handler
 
 - name: Find all auth keys in the directory for {{ user.name }}
