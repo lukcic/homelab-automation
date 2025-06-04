@@ -6,6 +6,7 @@
       vars:
         extra_packages:
           - bat
+          - zsh
     - role: common/users
     - role: common/shell
     - role: common/dist-upgrade

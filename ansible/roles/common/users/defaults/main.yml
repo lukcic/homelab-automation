@@ -9,5 +9,5 @@ all_users: # noqa: var-naming[no-role-prefix]
 
   - name: lukcic
     groups: wheel
-    shell: /bin/bash
+    shell: /usr/bin/zsh
     uid: 3000
