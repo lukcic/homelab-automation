@@ -9,11 +9,11 @@
     mode: '0600'
   with_dict: '{{ aliases }}'
 
-- name: Create aliases for lukcic
+- name: Create aliases for zsh_user
   ansible.builtin.lineinfile:
-    path: /home/lukcic/.bashrc
+    path: "/home/{{ zsh_user }}/.bashrc"
     line: "alias {{ item.key }}=\u0027{{ item.value }}\u0027"
-    owner: lukcic
+    owner: "{{ zsh_user }}"
     state: present
     insertafter: EOF
     create: true

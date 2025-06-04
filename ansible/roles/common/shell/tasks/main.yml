@@ -19,23 +19,23 @@
 
 - name: Configure packages for user
   become: true
-  become_user: lukcic
+  become_user: "{{ zsh_user }}"
   block:
     - name: Create autoinstall directory
       ansible.builtin.file:
-        path: /home/lukcic/autoinstall
+        path: "/home/{{ zsh_user }}/autoinstall"
         state: directory
         mode: '0700'
 
     - name: Check if Ohmyzsh is installed
       ansible.builtin.stat:
-        path: /home/lukcic/.oh-my-zsh
+        path: "/home/{{ zsh_user }}/.oh-my-zsh"
       register: result
 
     - name: Install Ohmyzsh
       ansible.builtin.shell: sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
       args:
-        chdir: /home/lukcic/autoinstall
+        chdir: "/home/{{ zsh_user }}/autoinstall"
       when: not result.stat.exists
       register: zsh_install
       changed_when: zsh_install.rc != 0
@@ -43,42 +43,42 @@
     - name: Install zsh-autosuggestions
       ansible.builtin.git: # noqa: latest
         repo: https://github.com/zsh-users/zsh-autosuggestions
-        dest: /home/lukcic/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+        dest: "/home/{{ zsh_user }}/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
         clone: true
         update: true
 
     - name: Install zsh-syntax-highlighting
       ansible.builtin.git: # noqa: latest
         repo: https://github.com/zsh-users/zsh-syntax-highlighting.git
-        dest: /home/lukcic/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+        dest: "/home/{{ zsh_user }}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"
         clone: true
         update: true
 
     - name: Install powerlevel10k
       become: true
-      become_user: lukcic
+      become_user: "{{ zsh_user }}"
       ansible.builtin.git: # noqa: latest
         repo: https://github.com/romkatv/powerlevel10k.git
-        dest: /home/lukcic/.oh-my-zsh/custom/themes/powerlevel10k
+        dest: "/home/{{ zsh_user }}/.oh-my-zsh/custom/themes/powerlevel10k"
         depth: 1
         clone: true
         update: true
 
     - name: Install tpm-tmux plugin
       become: true
-      become_user: lukcic
+      become_user: "{{ zsh_user }}"
       ansible.builtin.git: # noqa: latest
         repo: https://github.com/tmux-plugins/tpm
-        dest: /home/lukcic/.tmux/plugins/tpm
+        dest: "/home/{{ zsh_user }}/.tmux/plugins/tpm"
         clone: true
         update: true
 
     - name: Override config files
       ansible.builtin.copy:
         src: '{{ role_path }}/files/{{ item }}'
-        dest: '/home/lukcic/{{ item }}'
-        owner: lukcic
-        group: lukcic
+        dest: "/home/{{ zsh_user }}/{{ item }}"
+        owner: "{{ zsh_user }}"
+        group: "{{ zsh_user }}"
         mode: '0700'
       with_items:
         - .zshrc
@@ -87,7 +87,7 @@
 
 - name: Change shell
   ansible.builtin.user:
-    name: lukcic
+    name: "{{ zsh_user }}"
     shell: /usr/bin/zsh
 
 - name: Add aliasses

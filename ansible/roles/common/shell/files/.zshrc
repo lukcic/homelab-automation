@@ -111,15 +111,21 @@ export LANG=en_US.UTF-8
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-# TMUX="$(which tmux 2>/dev/null)"
-# if [[ -z "$TMUX" ]]; then
-#     ID=$("$TMUX" ls | grep -vm1 attached | cut -d: -f1)
-#     if [[ -z "${ID}" ]]; then
-#         "$TMUX" new-session
-#     else
-#         "$TMUX" attach-session -t "${ID}"
-#     fi
-# fi
+TMUX_BIN="$(which tmux 2>/dev/null)"
+if [[ -n "$TMUX_BIN" && -z "$TMUX" ]]; then
+    ID=$("$TMUX_BIN" ls 2>/dev/null | grep -vm1 attached | cut -d: -f1)
+    if [[ -z "${ID}" ]]; then
+        "$TMUX_BIN" new-session
+    else
+        "$TMUX_BIN" attach-session -t "${ID}"
+    fi
+fi
+
+bindkey "^[b" backward-word
+bindkey "^[f" forward-word
+
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+source $HOME/.config/.custom_aliases

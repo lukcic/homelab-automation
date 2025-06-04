@@ -7,3 +7,4 @@
         extra_packages:
           - bat
     - role: common/users
+    - role: common/shell
