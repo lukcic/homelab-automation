@@ -1,0 +1,16 @@
+- name: Update APT package index
+  ansible.builtin.apt:
+    update_cache: yes
+    cache_valid_time: 3600
+  when: ansible_os_family == "Debian"
+
+- name: Upgrade all packages to the latest version
+  ansible.builtin.apt:
+    upgrade: dist
+  when: ansible_os_family == "Debian"
+
+- name: Remove unused packages (autoremove)
+  ansible.builtin.apt:
+    autoremove: yes
+    purge: yes
+  when: ansible_os_family == "Debian"
