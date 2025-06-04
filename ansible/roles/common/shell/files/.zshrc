@@ -128,4 +128,4 @@ bindkey "^[f" forward-word
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-source $HOME/.config/.custom_aliases
+source $HOME/.custom_aliases
