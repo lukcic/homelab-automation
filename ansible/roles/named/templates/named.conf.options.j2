@@ -19,7 +19,7 @@ options {
             127.0.0.1;
             {{ listener_ip }}; 
         };
-        allow-transfer { none; };
+        allow-transfer { key "tsig-key"; };
 
         forwarders {
 {% for forwarder in forwarders %}
